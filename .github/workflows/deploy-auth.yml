@@ -1,0 +1,25 @@
+name: deploy-auth
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'auth/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd auth && docker build -t registry.gitlab.com/microservice_example/ticketing/auth .
+      - run: docker login registry.gitlab.com -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.GITLAB_USER }}
+          DOCKER_PASSWORD: ${{ secrets.GITLAB_TOKEN }}
+      - run: docker push registry.gitlab.com/microservice_example/ticketing/auth
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubectl rollout restart deployment auth-depl
