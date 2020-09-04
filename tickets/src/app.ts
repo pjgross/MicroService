@@ -24,7 +24,7 @@ app.use(json())
 app.use(
   cookieSession({
     signed: false,
-    secure: process.env.NODE_ENV !== "test",
+    secure: false, //process.env.NODE_ENV !== "test",
   })
 )
 // get the current user for every request if signed in
