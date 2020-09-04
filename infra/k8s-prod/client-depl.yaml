@@ -15,6 +15,9 @@ spec:
       containers:
         - name: client
           image: registry.gitlab.com/microservice_example/ticketing/client
+          env:
+            - name: SERVER_URL_BASE
+              value: "http://www.relman.xyz/"
           ports:
             - containerPort: 3000
       imagePullSecrets:

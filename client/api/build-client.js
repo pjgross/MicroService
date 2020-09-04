@@ -7,8 +7,7 @@ const buildClient = ({ req }) => {
     // We are on the server so we have to talk to the load balancer
     // need to check with on the cloud - does not work with minikube
     return axios.create({
-      baseURL:
-        "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local",
+      baseURL: process.env.SERVER_URL_BASE,
       headers: req.headers,
     })
   } else {
