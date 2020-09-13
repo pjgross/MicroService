@@ -63,6 +63,7 @@ ticketSchema.statics.build = (attrs: TicketAttrs) => {
     price: attrs.price,
   })
 }
+
 // add function to the document instead of the Model
 ticketSchema.methods.isReserved = async function () {
   // this === the ticket document that we just called 'isReserved' on

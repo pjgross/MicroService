@@ -1,1 +1,4 @@
 node_modules
+**/__mocks__
+**/__test__
+/src/test

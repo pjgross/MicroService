@@ -21,9 +21,10 @@ const OrderShow = ({ order, currentUser }) => {
     // calculate the time left function and update state
     const findTimeLeft = () => {
       const msLeft = new Date(order.expiresAt) - new Date()
+      // update the state changing to seconds
       setTimeLeft(Math.round(msLeft / 1000))
     }
-    // call the time left function
+    // call the time left function for the initial time
     findTimeLeft()
     // set interval to 1 sec
     const timerId = setInterval(findTimeLeft, 1000)
@@ -36,7 +37,8 @@ const OrderShow = ({ order, currentUser }) => {
   if (timeLeft < 0) {
     return <div>Order Expired</div>
   }
-  // what is displayed on the screen
+  // what is displayed on the screen including the stripe payment dialogue
+  // which passes the token to the request to the payments api if successful
   return (
     <div>
       Time left to pay: {timeLeft} seconds

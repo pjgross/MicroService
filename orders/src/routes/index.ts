@@ -3,7 +3,7 @@ import { requireAuth } from "@msexample/common"
 import { Order } from "../models/order"
 
 const router = express.Router()
-
+// get the orders for the current user
 router.get("/api/orders", requireAuth, async (req: Request, res: Response) => {
   // send back the users orders with the tickets populated
   const orders = await Order.find({

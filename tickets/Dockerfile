@@ -1,8 +1,26 @@
-FROM node:alpine
-
+# a base stage for all future stages
+# with only prod dependencies and
+# no code yet
+FROM node:14 as base
+ENV NODE_ENV=production
 WORKDIR /app
-COPY ./package.json ./
-RUN npm install --only=prod
-COPY ./ ./
+COPY package*.json ./
+RUN npm install --only=production \
+  && npm cache clean --force
+ENV PATH /app/node_modules/.bin:$PATH
 
+# a dev and build-only stage. to test run the following command
+# docker run registry.gitlab.com/microservice_example/ticketing/tickets:dev npm run test:ci 
+FROM base as dev
+ENV NODE_ENV=development
+RUN npm install --only=development
+COPY . .
 CMD ["npm","start"]
+
+FROM dev as build
+RUN tsc
+
+# this only has minimal deps and files
+FROM base as prod
+COPY --from=build /app/dist/ .
+CMD ["node", "index.js"]

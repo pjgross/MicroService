@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd orders && docker build -t registry.gitlab.com/microservice_example/ticketing/orders .
+      - run: cd orders && docker build -t registry.gitlab.com/microservice_example/ticketing/orders:prod --target prod .
       - run: docker login registry.gitlab.com -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.GITLAB_USER }}
           DOCKER_PASSWORD: ${{ secrets.GITLAB_TOKEN }}
-      - run: docker push registry.gitlab.com/microservice_example/ticketing/orders
+      - run: docker push registry.gitlab.com/microservice_example/ticketing/orders:prod
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}

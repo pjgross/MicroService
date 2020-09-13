@@ -15,8 +15,10 @@ import { natsWrapper } from "../nats-wrapper"
 
 const router = express.Router()
 
-// set the expiration window !todo needs to be an env variable
-const EXPIRATION_WINDOW_SECONDS = 15 * 60
+// set the expiration window
+const EXPIRATION_WINDOW_SECONDS = parseInt(
+  process.env.EXPIRATION_WINDOW_SECONDS!
+)
 
 // make sure the input is a valid mongodb id
 // this is assuming the source is mongo which may not be the case
