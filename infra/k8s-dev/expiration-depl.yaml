@@ -17,9 +17,15 @@ spec:
           image: registry.gitlab.com/microservice_example/ticketing/expiration
           env:
             - name: NATS_URL
-              value: "http://nats-srv:4222"
+              valueFrom:
+                configMapKeyRef:
+                  name: ticketing # The ConfigMap this value comes from.
+                  key: NATS_URL # The key to fetch.
             - name: NATS_CLUSTER_ID
-              value: ticketing
+              valueFrom:
+                configMapKeyRef:
+                  name: ticketing # The ConfigMap this value comes from.
+                  key: NATS_CLUSTER_ID # The key to fetch.
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:

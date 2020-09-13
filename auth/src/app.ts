@@ -9,6 +9,7 @@ import { currentUserRouter } from "./routes/current-user"
 import { signinRouter } from "./routes/signin"
 import { signoutRouter } from "./routes/signout"
 import { signupRouter } from "./routes/signup"
+import { healthzRouter } from "./routes/healthz"
 // import the express error middleware
 import { errorHandler, NotFoundError } from "@msexample/common"
 
@@ -33,6 +34,7 @@ app.use(currentUserRouter)
 app.use(signinRouter)
 app.use(signoutRouter)
 app.use(signupRouter)
+app.use(healthzRouter)
 // handle routes we were not expectinng
 app.all("*", async () => {
   throw new NotFoundError()

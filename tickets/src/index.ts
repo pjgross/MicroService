@@ -38,8 +38,18 @@ const start = async () => {
       process.exit()
     })
     // if the ticketing service is being closed tell nats
-    process.on("SIGINT", () => natsWrapper.client.close())
-    process.on("SIGTERM", () => natsWrapper.client.close())
+    process.on("SIGINT", async () => {
+      await mongoose.connection.close(() => {
+        console.log("Tickets closed Mongoose connection with DB")
+      })
+      natsWrapper.client.close()
+    })
+    process.on("SIGTERM", async () => {
+      await mongoose.connection.close(() => {
+        console.log("Tickets closed Mongoose connection with DB")
+      })
+      natsWrapper.client.close()
+    })
     // start the listeners for messages we are expecting
     new OrderCreatedListener(natsWrapper.client).listen()
     new OrderCancelledListener(natsWrapper.client).listen()

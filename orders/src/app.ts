@@ -9,6 +9,7 @@ import { newOrderRouter } from "./routes/new"
 import { showOrderRouter } from "./routes/show"
 import { indexOrderRouter } from "./routes/index"
 import { deleteOrderRouter } from "./routes/delete"
+import { healthzRouter } from "./routes/healthz"
 require("events").EventEmitter.defaultMaxListeners = 25
 
 const app = express()
@@ -25,6 +26,7 @@ app.use(
 app.use(currentUser)
 // routes for the service
 app.use(newOrderRouter)
+app.use(healthzRouter)
 app.use(showOrderRouter)
 app.use(indexOrderRouter)
 app.use(deleteOrderRouter)

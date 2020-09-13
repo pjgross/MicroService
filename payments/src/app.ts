@@ -9,6 +9,7 @@ import cookieSession from "cookie-session"
 // import the express error middleware
 import { errorHandler, NotFoundError, currentUser } from "@msexample/common"
 import { createChargeRouter } from "./routes/new"
+import { healthzRouter } from "./routes/healthz"
 // had to add this because i ran out of listeners on my mac
 require("events").EventEmitter.defaultMaxListeners = 25
 
@@ -28,6 +29,7 @@ app.use(
 app.use(currentUser)
 // routes for the service
 app.use(createChargeRouter)
+app.use(healthzRouter)
 // handle routes we were not expectinng
 app.all("*", async () => {
   throw new NotFoundError()

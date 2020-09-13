@@ -12,9 +12,29 @@ spec:
       labels:
         app: auth
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - auth-mongo
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - name: auth
-          image: registry.gitlab.com/microservice_example/ticketing/auth
+          image: registry.gitlab.com/microservice_example/ticketing/auth:prod
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/users/healthz
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
           env:
             - name: MONGO_URI
               value: "mongodb://auth-mongo-srv:27017/auth"
