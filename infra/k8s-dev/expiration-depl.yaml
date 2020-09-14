@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: expiration
-          image: registry.gitlab.com/microservice_example/ticketing/expiration
+          image: petegross/expiration:dev
           env:
             - name: NATS_URL
               valueFrom:
@@ -32,5 +32,3 @@ spec:
                   fieldPath: metadata.name
             - name: REDIS_HOST
               value: expiration-redis-srv
-      imagePullSecrets:
-        - name: regcred

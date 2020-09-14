@@ -2,6 +2,7 @@ import request from "supertest"
 import { app } from "../../app"
 
 it("returns a 201 on successful signup", async () => {
+  // create a user
   await request(app)
     .post("/api/users/signup")
     .send({

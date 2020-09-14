@@ -22,6 +22,15 @@ spec:
                     values:
                       - tickets-mongo
               topologyKey: "kubernetes.io/hostname"
+      initContainers: # wait for the mongodb to respond before starting pods
+        - name: init-db
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z tickets-mongo-srv:27017; do echo waiting for tickets-mongo-srv; sleep 2; done;",
+            ]
       containers:
         - name: tickets
           image: registry.gitlab.com/microservice_example/ticketing/tickets:prod
@@ -37,9 +46,15 @@ spec:
             timeoutSeconds: 10
           env:
             - name: NATS_URL
-              value: "http://nats-srv:4222"
+              valueFrom:
+                configMapKeyRef:
+                  name: ticketing # The ConfigMap this value comes from.
+                  key: NATS_URL # The key to fetch.
             - name: NATS_CLUSTER_ID
-              value: ticketing
+              valueFrom:
+                configMapKeyRef:
+                  name: ticketing # The ConfigMap this value comes from.
+                  key: NATS_CLUSTER_ID # The key to fetch.
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:

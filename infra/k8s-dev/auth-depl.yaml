@@ -4,14 +4,6 @@ metadata:
   name: auth-depl
 spec:
   replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1 # how many pods we can add at a time
-      maxUnavailable:
-        0
-        # maxUnavailable define how many pods can be
-        # unavailable during the rolling update
   selector:
     matchLabels:
       app: auth
@@ -20,18 +12,9 @@ spec:
       labels:
         app: auth
     spec:
-      initContainers: # wait for the mongodb to respond before starting pods
-        - name: init-db
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "until nc -z auth-mongo-srv:27017; do echo waiting for auth-mongo-srv; sleep 2; done;",
-            ]
       containers:
         - name: auth
-          image: registry.gitlab.com/microservice_example/ticketing/auth
+          image: petegross/auth:dev
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -50,8 +33,6 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-      imagePullSecrets:
-        - name: regcred
 ---
 apiVersion: v1
 kind: Service

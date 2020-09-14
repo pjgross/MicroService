@@ -1,6 +1,8 @@
 import Link from "next/link"
-
+// Header component for all pages
 const Header = ({ currentUser }) => {
+  // array which defines which menus are shown if currentUser is defined
+  // then create the menu html
   const links = [
     !currentUser && { label: "Sign Up", href: "/auth/signup" },
     !currentUser && { label: "Sign In", href: "/auth/signin" },
@@ -18,7 +20,7 @@ const Header = ({ currentUser }) => {
         </li>
       )
     })
-
+  // return Header component
   return (
     <nav className="navbar navbar-light bg-light">
       <Link href="/">

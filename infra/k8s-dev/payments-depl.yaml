@@ -12,18 +12,9 @@ spec:
       labels:
         app: payments
     spec:
-      initContainers: # wait for the mongodb to respond before starting pods
-        - name: init-db
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "until nc -z payments-mongo-srv:27017; do echo waiting for payments-mongo-srv; sleep 2; done;",
-            ]
       containers:
         - name: payments
-          image: registry.gitlab.com/microservice_example/ticketing/payments
+          image: petegross/payments:dev
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -63,8 +54,6 @@ spec:
                   key: STRIPE_KEY
           ports:
             - containerPort: 3000
-      imagePullSecrets:
-        - name: regcred
 ---
 apiVersion: v1
 kind: Service

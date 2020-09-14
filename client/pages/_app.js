@@ -16,6 +16,7 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
 // getInitial props can be called on the server or client
 AppComponent.getInitialProps = async (appContext) => {
   // build the axios endpoint which will vary if we are on the client or server
+  // the appContext.ctx has the request on it
   const client = buildClient(appContext.ctx)
   // call the auth endpoint
   const { data } = await client.get("/api/users/currentuser")

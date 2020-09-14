@@ -12,7 +12,7 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     const ticket = await Ticket.findByEvent(data)
     // error if the previous version could not be found
     if (!ticket) {
-      throw new Error("Ticket not found")
+      throw new Error("Ticket version not found")
     }
     // update the data
     const { title, price } = data
