@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: auth-persistent-volume-claim
 spec:
+  storageClassName: rook-ceph-block
   accessModes:
     - ReadWriteOnce
   resources:
