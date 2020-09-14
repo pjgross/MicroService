@@ -17,7 +17,10 @@ spec:
           image: registry.gitlab.com/microservice_example/ticketing/client
           env:
             - name: SERVER_URL_BASE
-              value: "http://www.relman.xyz/"
+              valueFrom:
+                configMapKeyRef:
+                  name: ticketing # The ConfigMap this value comes from.
+                  key: SERVER_URL_BASE # The key to fetch.
           ports:
             - containerPort: 3000
       imagePullSecrets:

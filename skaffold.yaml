@@ -3,13 +3,12 @@ kind: Config
 deploy:
   kubectl:
     manifests:
-      - ./infra/k8s/*
       - ./infra/k8s-dev/*
 build:
   local:
     push: false
   artifacts:
-    - image: registry.gitlab.com/microservice_example/ticketing/auth
+    - image: petegross/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -18,7 +17,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: registry.gitlab.com/microservice_example/ticketing/client
+    - image: petegross/client
       context: client
       docker:
         dockerfile: Dockerfile
@@ -26,7 +25,7 @@ build:
         manual:
           - src: "**/*.js"
             dest: .
-    - image: registry.gitlab.com/microservice_example/ticketing/tickets
+    - image: petegross/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile
@@ -35,7 +34,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: registry.gitlab.com/microservice_example/ticketing/orders
+    - image: petegross/orders
       context: orders
       docker:
         dockerfile: Dockerfile
@@ -44,7 +43,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: registry.gitlab.com/microservice_example/ticketing/expiration
+    - image: petegross/expiration
       context: expiration
       docker:
         dockerfile: Dockerfile
@@ -53,7 +52,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: registry.gitlab.com/microservice_example/ticketing/payments
+    - image: petegross/payments
       context: payments
       docker:
         dockerfile: Dockerfile

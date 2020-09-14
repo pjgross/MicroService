@@ -1,7 +1,7 @@
 import axios from "axios"
 
-// this can be called from the client or server so we have to
-// cater for this by checking whether window has been defined (i.e. client only)
+// This create an axios client to be called from initprops
+// initprops can  occur on the client or server so we have to cater for this
 const buildClient = ({ req }) => {
   if (typeof window === "undefined") {
     // We are on the server so we have to talk to the load balancer

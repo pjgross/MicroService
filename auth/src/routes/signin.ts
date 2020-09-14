@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express"
 import { body } from "express-validator"
 import jwt from "jsonwebtoken"
-
+// get the password hashing library
 import { Password } from "../services/password"
+// import data model
 import { User } from "../models/user"
 // import error handlers
 import { BadRequestError, validateRequest } from "@msexample/common"

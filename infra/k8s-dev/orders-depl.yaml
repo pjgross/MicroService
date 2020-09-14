@@ -12,18 +12,9 @@ spec:
       labels:
         app: orders
     spec:
-      initContainers: # wait for the mongodb to respond before starting pods
-        - name: init-db
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "until nc -z orders-mongo-srv:27017; do echo waiting for orders-mongo-srv; sleep 2; done;",
-            ]
       containers:
         - name: orders
-          image: registry.gitlab.com/microservice_example/ticketing/orders
+          image: petegross/orders:dev
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -63,8 +54,6 @@ spec:
                   key: JWT_KEY
           ports:
             - containerPort: 3000
-      imagePullSecrets:
-        - name: regcred
 ---
 apiVersion: v1
 kind: Service

@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useState } from "react"
-
+// This creates an axios client that is called from the page body
+// it defines the function to make the call and error  object is there are any
 const useRequest = ({ url, method, body, onSuccess }) => {
   // define the errors state that is returned
   const [errors, setErrors] = useState(null)

@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import useRequest from "../../hooks/use-request"
-
+// the signin page
 const signIn = () => {
+  // define next page router
   const router = useRouter()
+  //  define state
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  // define the signin call and errors object
   const { doRequest, errors } = useRequest({
     url: "/api/users/signin",
     method: "post",
@@ -15,13 +18,13 @@ const signIn = () => {
     },
     onSuccess: () => router.push("/"),
   })
-
+  // define the form submit action
   const onSubmit = async (event) => {
     event.preventDefault()
 
     await doRequest()
   }
-
+  // return the page
   return (
     <form onSubmit={onSubmit}>
       <h1>Sign In</h1>
