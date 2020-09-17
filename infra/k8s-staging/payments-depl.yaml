@@ -13,7 +13,7 @@ spec:
         app: payments
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/path: "api/payments/metrics"
+        prometheus.io/path: "/api/payments/metrics"
         prometheus.io/port: "3000"
     spec:
       affinity:

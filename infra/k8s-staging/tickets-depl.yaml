@@ -13,7 +13,7 @@ spec:
         app: tickets
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/path: "api/tickets/metrics"
+        prometheus.io/path: "/api/tickets/metrics"
         prometheus.io/port: "3000"
     spec:
       affinity:
