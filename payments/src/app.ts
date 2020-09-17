@@ -3,7 +3,7 @@ import express from "express"
 import "express-async-errors"
 import { json } from "body-parser"
 import cookieSession from "cookie-session"
-
+import swStats from "swagger-stats"
 // import the express route handlers
 
 // import the express error middleware
@@ -23,6 +23,14 @@ app.use(
   cookieSession({
     signed: false,
     secure: false, //process.env.NODE_ENV !== "test",
+  })
+)
+// add the swagger and prometheus metrics
+// /api/payments/ui  for the swagger stats ui
+// /api/payments/metrics for the prometheus endpoint
+app.use(
+  swStats.getMiddleware({
+    uriPath: "/api/payments",
   })
 )
 // get the current user for every request if signed in

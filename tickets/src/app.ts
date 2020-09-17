@@ -3,6 +3,7 @@ import express from "express"
 import "express-async-errors"
 import { json } from "body-parser"
 import cookieSession from "cookie-session"
+import swStats from "swagger-stats"
 
 // import the express route handlers
 import { createTicketRouter } from "./routes/new"
@@ -26,6 +27,14 @@ app.use(
   cookieSession({
     signed: false,
     secure: false, //process.env.NODE_ENV !== "test",
+  })
+)
+// add the swagger and prometheus metrics
+// /api/tickets/ui  for the swagger stats ui
+// /api/tickets/metrics for the prometheus endpoint
+app.use(
+  swStats.getMiddleware({
+    uriPath: "/api/tickets",
   })
 )
 // get the current user for every request if signed in

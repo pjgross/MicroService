@@ -3,6 +3,7 @@ import express from "express"
 import "express-async-errors"
 import { json } from "body-parser"
 import cookieSession from "cookie-session"
+import swStats from "swagger-stats"
 
 import { errorHandler, NotFoundError, currentUser } from "@msexample/common"
 import { newOrderRouter } from "./routes/new"
@@ -20,6 +21,14 @@ app.use(
   cookieSession({
     signed: false,
     secure: false, //process.env.NODE_ENV !== "test",
+  })
+)
+// add the swagger and prometheus metrics
+// /api/orders/ui  for the swagger stats ui
+// /api/orders/metrics for the prometheus endpoint
+app.use(
+  swStats.getMiddleware({
+    uriPath: "/api/orders",
   })
 )
 // attach the current user to the request body on all calls
