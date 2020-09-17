@@ -20,7 +20,14 @@ CMD ["npm","start"]
 FROM dev as build
 RUN tsc
 
-# this only has minimal deps and files
-FROM base as prod
-COPY --from=build /app/dist/ .
+# build as small an image as possible and copy the generated js files from bbuild stage
+# only an idiot uses npm to run in production
+FROM node:14-alpine as prod
+ENV NODE_ENV=production
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --only=production \
+  && npm cache clean --force
+ENV PATH /app/node_modules/.bin:$PATH
+COPY --from=build /app/dist .
 CMD ["node", "index.js"]
