@@ -3,6 +3,7 @@ import express from "express"
 import "express-async-errors"
 import { json } from "body-parser"
 import cookieSession from "cookie-session"
+import swStats from "swagger-stats"
 
 // import the express route handlers
 import { currentUserRouter } from "./routes/current-user"
@@ -28,7 +29,14 @@ app.use(
     secure: false, //process.env.NODE_ENV !== "test",
   })
 )
-
+// add the swagger and prometheus metrics
+// /api/users/ui  for the swagger stats ui
+// /api/users/metrics for the prometheus endpoint
+app.use(
+  swStats.getMiddleware({
+    uriPath: "/api/users",
+  })
+)
 // routes for the service
 app.use(currentUserRouter)
 app.use(signinRouter)
