@@ -21,7 +21,7 @@ spec:
         app: auth
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/path: "api/users/metrics"
+        prometheus.io/path: "/api/users/metrics"
         prometheus.io/port: "3000"
     spec:
       affinity:

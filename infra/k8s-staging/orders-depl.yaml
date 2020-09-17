@@ -13,7 +13,7 @@ spec:
         app: orders
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/path: "api/orders/metrics"
+        prometheus.io/path: "/api/orders/metrics"
         prometheus.io/port: "3000"
     spec:
       affinity:
