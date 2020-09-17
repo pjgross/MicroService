@@ -1,1 +1,1 @@
-I will update the readme in the comming weeks
+I will update the readme in the coming weeks
