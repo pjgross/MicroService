@@ -1,0 +1,291 @@
+openapi: 3.0.3
+info:
+  title: auth service
+  description: Specification for auth service REST api
+  termsOfService: http://ticketing.dev/terms/
+  contact:
+    name: Peter Gross
+    url: https://www.linkedin.com/in/peter-gross-b435869/
+    email: pjgro66@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: "1.0"
+servers:
+  - url: http://ticketing.dev
+    description: Development Server
+  - url: http://www.relman.xyz
+    description: QA Server
+  - url: https://www.relman.com
+    description: Production Server
+paths:
+  /api/users/signup:
+    post:
+      tags:
+        - Users
+      summary: register and return the authentication cookie
+      description: register and return the authentication cookie
+      requestBody:
+        required: true
+        description: A JSON object containing the email and password.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: >
+            Successfully registered and logged in.
+            The session ID is returned in a cookie named `express:sess`. You need to include this cookie in subsequent requests.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: express:sess=abcde12345...; Path=/; HttpOnly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBody"
+      security: []
+  /api/users/signin:
+    post:
+      tags:
+        - Users
+      summary: login and return the authentication cookie
+      description: login and return the authentication cookie
+      requestBody:
+        required: true
+        description: A JSON object containing the email and password.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: >
+            Successfully logged in.
+            The session ID is returned in a cookie named `express:sess`. You need to include this cookie in subsequent requests.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: express:sess=abcde12345...; Path=/; HttpOnly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBody"
+      security: []
+  /api/users/signout:
+    post:
+      tags:
+        - Users
+      summary: logout and delete cookie
+      description: logout and delete cookie
+      responses:
+        200:
+          description: Successfully logged out.
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBody"
+      security: []
+  /api/users/currentuser:
+    get:
+      tags:
+        - Users
+      summary: Get the current signed in user
+      description: Get the current signed in user
+      parameters:
+        - in: cookie
+          name: express:sess
+          schema:
+            type: string
+      responses:
+        200:
+          description: Current User Information
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/UserNotFound"
+                  - $ref: "#/components/schemas/CurrentUser"
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBody"
+      security: []
+  /api/users/healthz:
+    get:
+      tags:
+        - Users
+      description: Health Check
+      responses:
+        200:
+          description: healthy confirmation
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          example: 5f8898f22b11b50024d5b084
+        email:
+          type: string
+          example: peter@test.com
+        password:
+          type: string
+          writeOnly: true
+          minLength: 4
+          maxLength: 20
+          example: 8ededhF££4565
+      description: user object
+    CurrentUser:
+      type: object
+      description: User logged in
+      properties:
+        currentUser:
+          type: object
+          properties:
+            email:
+              type: string
+              example: peter@test.com
+            id:
+              type: string
+              readOnly: true
+              example: 8ededhF££4565
+            iat:
+              type: integer
+              format: int32
+    UserNotFound:
+      type: object
+      description: user not logged in
+      properties:
+        currentUser:
+          type: string
+          description: no user cookie found
+          example: null
+          default: null
+    ErrorBody:
+      type: object
+      description: Body of the error response
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorList"
+    ErrorList:
+      type: array
+      description: List of Errors
+      items:
+        $ref: "#/components/schemas/Error"
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Price must be greater than zero
+        field:
+          type: string
+          example: price
+    PagedResponse:
+      type: object
+      properties:
+        pageable:
+          $ref: "#/components/schemas/PagedResponse_pageable"
+        totalPages:
+          type: integer
+          format: int32
+        last:
+          type: boolean
+        totalElements:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        sort:
+          $ref: "#/components/schemas/PagedResponse_pageable_sort"
+        first:
+          type: boolean
+    PagedResponse_pageable_sort:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+    PagedResponse_pageable:
+      type: object
+      properties:
+        sort:
+          $ref: "#/components/schemas/PagedResponse_pageable_sort"
+        offset:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+  parameters:
+    PageNumberParam:
+      name: pageNumber
+      in: query
+      description: Page Number
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+        default: 1
+    PageSizeParam:
+      name: pageSize
+      in: query
+      description: Page Size
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+        default: 25
+  securitySchemes:
+    cookieAuth:
+      description: >-
+        Session key to identify user session.
+      type: apiKey
+      in: cookie
+      name: express:sess

@@ -1,0 +1,183 @@
+openapi: 3.0.3
+info:
+  title: payments service
+  description: Specification for tickets service REST api
+  termsOfService: http://ticketing.dev/terms/
+  contact:
+    name: Peter Gross
+    url: https://www.linkedin.com/in/peter-gross-b435869/
+    email: pjgro66@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: "1.0"
+servers:
+  - url: http://ticketing.dev
+    description: Development Server
+  - url: http://www.relman.xyz
+    description: QA Server
+  - url: https://www.relman.com
+    description: Production Server
+paths:
+  /api/payments:
+    post:
+      tags:
+        - Payments
+      summary: New Payment
+      description: Create a new payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Payment"
+        required: true
+      responses:
+        201:
+          description: Payment Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBody"
+      security:
+        - cookieAuth: []
+  /api/payments/healthz:
+    get:
+      tags:
+        - Payments
+      description: Health Check
+      responses:
+        200:
+          description: Healthy confirmation
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    Payment:
+      type: object
+      properties:
+        token:
+          type: string
+          readOnly: true
+          example: 5f8898f22b11b50024d5b084
+        orderId:
+          type: string
+          format: uuid
+          readOnly: true
+          example: 5f8898f22b11b50024d5b084
+      description: payment object
+    PaymentResponse:
+      type: object
+      description: id of payment record
+      properties:
+        id:
+          type: string
+          example: 788387hhb3772ggb277893
+    ErrorBody:
+      type: object
+      description: Body of the error response
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorList"
+    ErrorList:
+      type: array
+      description: List of Errors
+      items:
+        $ref: "#/components/schemas/Error"
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Price must be greater than zero
+        field:
+          type: string
+          example: price
+    PagedResponse:
+      type: object
+      properties:
+        pageable:
+          $ref: "#/components/schemas/PagedResponse_pageable"
+        totalPages:
+          type: integer
+          format: int32
+        last:
+          type: boolean
+        totalElements:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        sort:
+          $ref: "#/components/schemas/PagedResponse_pageable_sort"
+        first:
+          type: boolean
+    PagedResponse_pageable_sort:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+    PagedResponse_pageable:
+      type: object
+      properties:
+        sort:
+          $ref: "#/components/schemas/PagedResponse_pageable_sort"
+        offset:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+  parameters:
+    PageNumberParam:
+      name: pageNumber
+      in: query
+      description: Page Number
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+        default: 1
+    PageSizeParam:
+      name: pageSize
+      in: query
+      description: Page Size
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+        default: 25
+  securitySchemes:
+    cookieAuth:
+      description: >-
+        Session key to identify user session.
+      type: apiKey
+      in: cookie
+      name: express:sess

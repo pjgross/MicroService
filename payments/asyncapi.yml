@@ -1,0 +1,126 @@
+asyncapi: "2.0.0"
+info:
+  title: payments service
+  version: "1.1.0"
+servers:
+  production:
+    url: http://tickets-srv:3000
+    protocol: nats
+    description: This is the payments service.
+channels:
+  "order:cancelled":
+    subscribe:
+      message:
+        $ref: "#/components/messages/order-cancelled"
+  "order:created":
+    subscribe:
+      message:
+        $ref: "#/components/messages/order-created"
+  "payment:created":
+    publish:
+      message:
+        $ref: "#/components/messages/payment-created"
+components:
+  messages:
+    order-cancelled:
+      summary: Action received when order is cancelled.
+      description: |
+        A ticket needs to be unreserved when an order
+        is cancelled
+      tags:
+        - name: Orders
+        - name: cancelled
+      payload:
+        type: object
+        required:
+          - id
+          - version
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          version:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+          ticket:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 9993ujj3883hhww23
+    order-created:
+      summary: Action received when order is created.
+      description: |
+        A ticket needs to be reserved when an order
+        is created
+      tags:
+        - name: Orders
+        - name: created
+      payload:
+        type: object
+        required:
+          - id
+          - version
+          - status
+          - expiresAt
+          - userId
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          version:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 0
+          status:
+            type: string
+            enum:
+              - created
+              - cancelled
+              - complete
+            example: created
+          userId:
+            type: string
+            example: 9993ujj3883hhww82
+          expiresAt:
+            type: string
+            format: datetime
+            example: 2019-08-24T14:15:22Z
+          ticket:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 9993ujj3883hhww82
+              price:
+                type: number
+                format: double
+                minimum: 0.00
+                example: 120.99
+    payment-created:
+      summary: Action sent when payment is created.
+      description: |
+        Used by any service that needs to know when
+        a payment is created
+      tags:
+        - name: Payments
+        - name: created
+      payload:
+        type: object
+        required:
+          - id
+          - orderId
+          - stripeId
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          orderId:
+            type: string
+            example: 9993ujj3883h29983ju
+          stripeId:
+            type: string
+            example: 122882hhh262gg2u2jj2992h2h
