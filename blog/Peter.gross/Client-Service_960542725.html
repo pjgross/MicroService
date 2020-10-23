@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Client Service</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542721.html">4) System Design</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Client Service
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 06, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>This service has been written as a server side NextJS application, and kept minimal since it is not the purpose of this example to show how to write fully functional NextJS applications.</p><p>I have concentrated on the following issues when building this client</p><ol><li>How to handle the fact that SSR application requests to the REST API can occur from the client or the server (See notes <a href="NextJS-Rest-call-issues-in-Kubernetes_960542714.html">here</a>)</li><li>How to handle authentication when using SSR applications (See the <a href="Auth-Service_960542723.html">auth service</a> for the implementation)</li></ol><p><br/></p><h2 id="ClientService-RestApidesignforgetInitialProps">RestApi design for getInitialProps</h2><p style="margin-left: 30.0px;">The following function will return an axios client pre configured to call the correct end point depending whether the call is one the server or client for the getInitialProps function</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import axios from &quot;axios&quot;
+
+// this can be called from the client or server so we have to
+// cater for this by checking whether window has been defined (i.e. client only)
+const buildClient = ({ req }) =&gt; {
+  if (typeof window === &quot;undefined&quot;) {
+    // We are on the server so we have to talk to the load balancer
+    // need to check with on the cloud - does not work with minikube
+    return axios.create({
+      baseURL: process.env.SERVER_URL_BASE,
+      headers: req.headers,
+    })
+  } else {
+    // We must be on the browser
+    return axios.create({
+      baseUrl: &quot;/&quot;,
+    })
+  }
+}
+
+export default buildClient</pre>
+</div></div><p style="margin-left: 30.0px;"><br/></p><p>        This is passed into the app's getInitialProps which will pass it down to the pages props, and you can see here that the client is used to retrieve the currentuser <span style="color: rgb(51,102,255);">client.get(&quot;/api/user/currentuser&quot;)</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// getInitial props can be called on the server or client
+AppComponent.getInitialProps = async (appContext) =&gt; {
+  // build the axios endpoint which will vary if we are on the client or server
+  const client = buildClient(appContext.ctx)
+  // call the auth endpoint
+  const { data } = await client.get(&quot;/api/users/currentuser&quot;)
+  // call the pages getInitialprops since this is not called if one exists
+  // on the _app component
+  let pageProps = {}
+  if (appContext.Component.getInitialProps) {
+    pageProps = await appContext.Component.getInitialProps(
+      appContext.ctx,
+      client,
+      data.currentUser
+    )
+  }
+  //pass the information onto the AppComponent
+  return {
+    pageProps,
+    ...data,
+  }
+}</pre>
+</div></div><p style="margin-left: 30.0px;">Then if the page has a getInitialProps then it can call a REST api using the client e.g.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">OrderShow.getInitialProps = async (context, client) =&gt; {
+  // get the order id from the query string
+  // the orderId comes from the name of the file
+  const { orderId } = context.query
+  // retrieve the order from the database using axios client we created
+  const { data } = await client.get(`/api/orders/${orderId}`)
+  // merge data into page props
+  return { order: data }
+}</pre>
+</div></div><p style="margin-left: 30.0px;"><br/></p><h2 id="ClientService-DesignforClientRESTapisanddealingwitherrors">Design for Client REST apis and dealing with errors</h2><p style="margin-left: 30.0px;">When calling the REST api within a page, it will be called from the client and never from the server, so for this function I looked at dealing with the request, what to do on success and displaying errors if there were any.</p><p style="margin-left: 30.0px;">This function returns</p><p style="margin-left: 30.0px;">1) A function that can be called (useRequest) formatted with the url, rest method and data and a callback function of what to do if successful (this makes it easy to be called from an html event)</p><p style="margin-left: 30.0px;">2) Errors formatted as html that can be inserted in the page</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import axios from &quot;axios&quot;
+import { useState } from &quot;react&quot;
+
+const useRequest = ({ url, method, body, onSuccess }) =&gt; {
+  // define the errors state that is returned
+  const [errors, setErrors] = useState(null)
+  // define the function definition that is returned
+  const doRequest = async (props = {}) =&gt; {
+    try {
+      // reset the errors on each new call
+      setErrors(null)
+      // make the call
+      const response = await axios[method](url, { ...body, ...props })
+      // if there was a callback then call it
+      // we do it here because the calling program does not get any errors since we catch them
+      if (onSuccess) {
+        onSuccess(response.data)
+      }
+      // return the fetch data
+      return response.data
+    } catch (err) {
+      // if there was an error then set the error state
+      setErrors(
+        &lt;div className=&quot;alert alert-danger&quot;&gt;
+          &lt;h4&gt;Ooops....&lt;/h4&gt;
+          &lt;ul className=&quot;my-0&quot;&gt;
+            {err.response.data.errors.map((err) =&gt; (
+              &lt;li key={err.message}&gt;{err.message}&lt;/li&gt;
+            ))}
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      )
+    }
+  }
+  // return the request function and error state
+  return { doRequest, errors }
+}
+
+export default useRequest</pre>
+</div></div><p style="margin-left: 30.0px;">For example at the top of your NextJS page</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">  const { doRequest, errors } = useRequest({
+    url: &quot;/api/users/signin&quot;,
+    method: &quot;post&quot;,
+    body: {
+      email,
+      password,
+    },
+    onSuccess: () =&gt; router.push(&quot;/&quot;),
+  })</pre>
+</div></div><p style="margin-left: 30.0px;">We can then use doRequest and errors within our page</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: js; gutter: false; theme: Confluence" data-theme="Confluence">const onSubmit = async (event) =&gt; {
+  event.preventDefault()
+
+  await doRequest()
+}
+
+return (
+  &lt;form onSubmit={onSubmit}&gt;
+    &lt;h1&gt;Sign In&lt;/h1&gt;
+    &lt;div className=&quot;form-group&quot;&gt;
+      &lt;label&gt;Email Address&lt;/label&gt;
+      &lt;input
+        value={email}
+        onChange={(e) =&gt; setEmail(e.target.value)}
+        className=&quot;form-control&quot;
+      /&gt;
+    &lt;/div&gt;
+    &lt;div className=&quot;form-group&quot;&gt;
+      &lt;label&gt;Password&lt;/label&gt;
+      &lt;input
+        value={password}
+        onChange={(e) =&gt; setPassword(e.target.value)}
+        type=&quot;password&quot;
+        className=&quot;form-control&quot;
+      /&gt;
+    &lt;/div&gt;
+    {errors}
+    &lt;button className=&quot;btn btn-primary&quot;&gt;Sign In&lt;/button&gt;
+  &lt;/form&gt;
+)</pre>
+</div></div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

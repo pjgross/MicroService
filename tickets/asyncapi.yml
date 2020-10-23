@@ -1,0 +1,173 @@
+asyncapi: "2.0.0"
+info:
+  title: tickets service
+  version: "1.1.0"
+servers:
+  production:
+    url: http://tickets-srv:3000
+    protocol: nats
+    description: This is the tickets service.
+channels:
+  "order:cancelled":
+    subscribe:
+      message:
+        $ref: "#/components/messages/order-cancelled"
+  "order:created":
+    subscribe:
+      message:
+        $ref: "#/components/messages/order-created"
+  "ticket:created":
+    publish:
+      message:
+        $ref: "#/components/messages/ticket-created"
+  "ticket:updated":
+    publish:
+      message:
+        $ref: "#/components/messages/ticket-updated"
+components:
+  messages:
+    order-cancelled:
+      summary: Action received when order is cancelled.
+      description: |
+        A ticket needs to be unreserved when an order
+        is cancelled
+      tags:
+        - name: Orders
+        - name: cancelled
+      payload:
+        type: object
+        required:
+          - id
+          - version
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          version:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+          ticket:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 9993ujj3883hhww23
+    order-created:
+      summary: Action received when order is created.
+      description: |
+        A ticket needs to be reserved when an order
+        is created
+      tags:
+        - name: Orders
+        - name: created
+      payload:
+        type: object
+        required:
+          - id
+          - version
+          - status
+          - expiresAt
+          - userId
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          version:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 0
+          status:
+            type: string
+            enum:
+              - created
+              - cancelled
+              - complete
+            example: created
+          userId:
+            type: string
+            example: 9993ujj3883hhww82
+          expiresAt:
+            type: string
+            format: datetime
+            example: 2019-08-24T14:15:22Z
+          ticket:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 9993ujj3883hhww82
+              price:
+                type: number
+                format: double
+                minimum: 0.00
+                example: 120.99
+    ticket-created:
+      summary: Action sent when ticket is created.
+      description: |
+        Used by any service that needs to know when
+        a ticket is created
+      tags:
+        - name: Tickets
+        - name: created
+      payload:
+        type: object
+        required:
+          - id
+          - version
+          - title
+          - price
+          - userId
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          version:
+            type: integer
+            example: 0
+          title:
+            type: string
+            example: Concert
+          price:
+            type: number
+            format: double
+            minimum: 0.00
+            example: 120.00
+          userId:
+            type: string
+            example: 9993ujj3883hhww82
+          orderId:
+            type: string
+            example: 9993ujj3883h29983ju
+    ticket-updated:
+      summary: Action sent when ticket is updated.
+      description: |
+        Used by any service that needs to know when
+        a ticket is updated
+      tags:
+        - name: Tickets
+        - name: updated
+      payload:
+        type: object
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          version:
+            type: integer
+            example: 1
+          title:
+            type: string
+            example: Concert
+          price:
+            type: number
+            format: double
+            example: 130.00
+          userId:
+            type: string
+            example: 9993ujj3883hhww82
+          orderId:
+            type: string
+            example: 9993ujj3883hhww82

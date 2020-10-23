@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Ingress Service</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542721.html">4) System Design</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Ingress Service
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 14, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>Our Kubernetes cluster has one entry point, so we need a way of routing the incoming requests from the clients to the specific services that handle the requested api.</p><p><br/></p><p>For this implementation I used the <a class="external-link" href="https://kubernetes.github.io/ingress-nginx" rel="nofollow">Kubernetes Nginx Ingress Controller</a> which will need to be installed on your cluster before you try and run the manisfest files.</p><p>Installing will vary depending on your platform, instructions can be found <a class="external-link" href="https://kubernetes.github.io/ingress-nginx/deploy" rel="nofollow">here</a></p><p><br/></p><p>This is all you have to do for a cloud provider and docker for desktop,  however Nginx Ingress controller will try and setup a loadbalancer for you, (on AWS it will automatically create an ELB and tie it to your cluster) however is you are using VirualBox (or similar)  to create your cluster at home, then it will be unable to create the load balancer.  This is where a package called <a class="external-link" href="https://metallb.universe.tf" rel="nofollow">Metallb</a> came to the rescue, and setup a loadbalancer on my baremetal cluster for me.</p><p><br/></p><p>Once the Ingress controller is setup we just needed to provide the routing rules</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: &quot;true&quot;
+spec:
+  rules:
+    - host: ticketing.dev
+      http:
+        paths:
+          - path: /api/payments/?(.*)
+            backend:
+              serviceName: payments-srv
+              servicePort: 3000
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-srv
+              servicePort: 3000
+          - path: /api/tickets/?(.*)
+            backend:
+              serviceName: tickets-srv
+              servicePort: 3000
+          - path: /api/orders/?(.*)
+            backend:
+              serviceName: orders-srv
+              servicePort: 3000
+          - path: /?(.*)
+            backend:
+              serviceName: client-srv
+              servicePort: 3000</pre>
+</div></div><p>and in my case I mapped ticketing.dev to the loadbalancer via changing the hosts file.  (for docker desktop this is 127.0.0.1)</p><p>Note: you have to place the NextJS route last since this can have many values and must be covered by a generic regex</p><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

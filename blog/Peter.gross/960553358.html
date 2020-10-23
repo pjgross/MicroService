@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 1) Componentisation via services</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542694.html">1) Introduction</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553333.html">2) Martin Fowlers guidelines on Microservices</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 1) Componentisation via services
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 17, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<div class="panel" style="border-width: 1px;"><div class="panelContent">
+There are an number of ways of dividing up the code, either by placing code into libraries, or by creating software that exposes a public api that provides a service to the caller
+</div></div><h2 id="id-1)Componentisationviaservices-Introduction">Introduction</h2><ul><li>Modular design is always a good idea</li><li>Software can be broken down in seperate components</li><li>These components can be achieved using<ul><li>Libraries - called directly within the process</li><li>Services - called by a public API (REST, Graphql or GRPc)</li></ul></li></ul><p><br/></p><p>In a Monolith application all of the functionality is part of the single application</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="400" src="attachments/960553358/960557144.png" data-image-src="attachments/960553358/960557144.png" data-unresolved-comment-count="0" data-linked-resource-id="960557144" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-15_11-27-19.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553358" data-linked-resource-container-version="7"></span></p><p>The Microservice architecture is about splitting out functionlity into seperate application that provide public api's to provide their services</p><p style="margin-left: 90.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="450" src="attachments/960553358/960557146.png" data-image-src="attachments/960553358/960557146.png" data-unresolved-comment-count="0" data-linked-resource-id="960557146" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-15_11-27-49.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553358" data-linked-resource-container-version="7"></span></p><p>You can still use libraries to provide modularity of common code, for example in NodeJS you can package code into npm modules but the design of the architecture is not based around these modules</p><p style="margin-left: 210.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" height="222" src="attachments/960553358/960557148.png" data-image-src="attachments/960553358/960557148.png" data-unresolved-comment-count="0" data-linked-resource-id="960557148" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-15_11-28-34.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553358" data-linked-resource-container-version="7"></span></p><p>The aim is to create smaller components that can be developed and deployed faster</p><p><br/></p><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960553514.png">image2020-9-11_15-18-0.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960553517.png">image2020-9-11_15-18-58.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960553521.png">image2020-9-11_15-19-38.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960553522.png">image2020-9-11_15-20-13.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960553523.png">image2020-9-11_15-20-43.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960553526.png">image2020-9-11_15-22-6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960557144.png">image2020-9-15_11-27-19.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960557146.png">image2020-9-15_11-27-49.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553358/960557148.png">image2020-9-15_11-28-34.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

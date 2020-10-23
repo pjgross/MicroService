@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Expiration Service</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542721.html">4) System Design</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Expiration Service
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 14, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>This service looks for order:created messages on the Nast Streaming server and starts a clock for a specified time (an environment variable).</p><p>When the timer has run out it sends an expiration:complete message which the orders service is listening for.</p><p>If the order has not been paid for by this point the order service will cancel the order and free up the ticket.</p><p><br/></p><p>1) I would have liked to send a message with a delay on it, which some messaging services can do, however Nats Streaming does not support this so we had to implement our own solution.</p><p><br/></p><p>2) We used the <a class="external-link" href="https://www.npmjs.com/package/bull" rel="nofollow">bull npm module</a> to accomplish this task.  This requires a redis server to store its work queue, but all we need to do was setup a queue telling it to call the publisher when the timer was up</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// define the bull queue process the listener invokes
+import Queue from &quot;bull&quot;
+import { ExpirationCompletePublisher } from &quot;../events/publishers/expiration-complete-publisher&quot;
+import { natsWrapper } from &quot;../nats-wrapper&quot;
+
+// define the information we are sending to the queue
+interface Payload {
+  orderId: string
+}
+// setup a bull queue with name &#39;order:expiration&#39;, telling it the location of redis
+const expirationQueue = new Queue&lt;Payload&gt;(&quot;order:expiration&quot;, {
+  redis: {
+    host: process.env.REDIS_HOST,
+  },
+})
+// define what happens when the job is processed
+expirationQueue.process(async (job) =&gt; {
+  new ExpirationCompletePublisher(natsWrapper.client).publish({
+    orderId: job.data.orderId,
+  })
+})
+
+export { expirationQueue }</pre>
+</div></div><p class="auto-cursor-target">then start listening for the order created event which used the add method on the queue to start the timer</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import { Listener, OrderCreatedEvent, Subjects } from &quot;@msexample/common&quot;
+import { Message } from &quot;node-nats-streaming&quot;
+import { queueGroupName } from &quot;./queue-group-name&quot;
+import { expirationQueue } from &quot;../../queues/expiration-queue&quot;
+
+export class OrderCreatedListener extends Listener&lt;OrderCreatedEvent&gt; {
+  readonly subject = Subjects.OrderCreated
+  queueGroupName = queueGroupName
+  // define what happens when the listener detects a new order event
+  async onMessage(data: OrderCreatedEvent[&quot;data&quot;], msg: Message) {
+    // define the delay that should occur
+    const delay = new Date(data.expiresAt).getTime() - new Date().getTime()
+    console.log(&quot;Waiting this many milliseconds to process the job:&quot;, delay)
+    // create the bull queue with the orderid and the delay required
+    await expirationQueue.add(
+      {
+        orderId: data.id,
+      },
+      {
+        delay,
+      }
+    )
+    // tell Nats we have processed this event
+    msg.ack()
+  }
+}</pre>
+</div></div><p class="auto-cursor-target">and then define the publisher which basically just maps the common modules ExpirationCompleteEvent definition to the base publisher class</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// define what to do when the bull delay has expired
+import { Subjects, Publisher, ExpirationCompleteEvent } from &quot;@msexample/common&quot;
+
+export class ExpirationCompletePublisher extends Publisher&lt;
+  ExpirationCompleteEvent
+&gt; {
+  readonly subject = Subjects.ExpirationComplete
+}</pre>
+</div></div></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 2) Chosen Technology</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 2) Chosen Technology
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 15, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p style="margin-left: 60.0px;"><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>As with most topics I research now a days I went to the <a class="external-link" href="https://www.cncf.io/" rel="nofollow">CNCF</a> to make a choice on what I should be using technology wise.</p><p>A useful tool was. their Cloud Native Trail map, intended to <span style="color: rgb(36,41,46);">provide an overview for enterprises starting their cloud native journey.</span></p><h2 id="id-2)ChosenTechnology-https://github.com/cncf/landscape/blob/master/README.md#trail-map"><a class="external-link" href="https://github.com/cncf/landscape/blob/master/README.md#trail-map" rel="nofollow"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="750" src="attachments/960542702/960550976.png" data-image-src="attachments/960542702/960550976.png" data-unresolved-comment-count="0" data-linked-resource-id="960550976" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-10_13-21-16.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542702" data-linked-resource-container-version="14"></span></a></h2><p>I also looked at the technology that makes up. part of the CNCF</p><p><a class="external-link" href="https://landscape.cncf.io/" rel="nofollow"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="750" src="attachments/960542702/960551010.png" data-image-src="attachments/960542702/960551010.png" data-unresolved-comment-count="0" data-linked-resource-id="960551010" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-10_13-27-34.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542702" data-linked-resource-container-version="14"></span></a></p><p>So knowing I wanted to learn Micro Services using the <a href="960553393.html">12 Factor App</a> methodology and using the information from the CNCF, I choose the following technologies</p><h2 id="id-2)ChosenTechnology-Platform">Platform</h2><p>I choose Kubernetes as the platform to develop for, since it comes with the building blocks for service discovery, logging, monitoring and scaling of the applications built into it. </p><p>In my environment I will be using CoreDNS for the service discovery, for networking I will stick to a layer 2 network using Flannel.  The staging environment will use Rook for the distributed storage and docker containers will be used for containerisation.</p><h2 id="id-2)ChosenTechnology-Languages">Languages</h2><p>Some of the recommended languages are:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="400" src="attachments/960542702/960553987.png" data-image-src="attachments/960542702/960553987.png" data-unresolved-comment-count="0" data-linked-resource-id="960553987" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-12_14-7-15.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542702" data-linked-resource-container-version="14"></span></p><p style="margin-left: 30.0px;">Since It has been 14 years since I have developed on .Net, I decided to use nodejs which I have been using for 3 years.</p><p style="margin-left: 30.0px;">The front end will be developed in <a class="external-link" href="https://nextjs.org/" rel="nofollow">NextJS</a>.</p><p style="margin-left: 60.0px;">This was mainly due to the fact I am familiar with React and need to learn more about server side rendering.  I also learned about a major issue when running in Kubernetes, so it was a good choice.</p><p style="margin-left: 30.0px;">The backend will be developed in <a class="external-link" href="https://nodejs.org/en/" rel="nofollow">NodeJS</a> using <a class="external-link" href="https://www.typescriptlang.org/" rel="nofollow">Typescript</a></p><p style="margin-left: 60.0px;">See design considerations for why we are using typescript</p><p style="margin-left: 30.0px;"><a class="external-link" href="https://jestjs.io/" rel="nofollow">Jest</a> has been used to create the automated tests</p><h2 id="id-2)ChosenTechnology-Database">Database</h2><p style="margin-left: 30.0px;">In phase 1 of this example I am only implementing local stores for each service which are simple structures so I have chosen <a class="external-link" href="https://www.mongodb.com/" rel="nofollow">MongoDB</a> as their data stroage</p><p style="margin-left: 30.0px;">and the expiration service requires an in memory cache so i choose <a class="external-link" href="https://redis.io/" rel="nofollow">Redis</a>.</p><p style="margin-left: 30.0px;">In phase 2 i will be implementing a Management Information service, so I will be using a SQL database for this, most probably MySQL or Postgres.</p><p style="margin-left: 30.0px;">Any storage of files in phase 2 will use Rooks S3 binary compatable object storage.</p><h2 id="id-2)ChosenTechnology-PaymentService">Payment Service</h2><p style="margin-left: 30.0px;">To simulate payments I have used the <a class="external-link" href="https://stripe.com/gb" rel="nofollow">Stripe</a> payment service in test mode</p><h2 id="id-2)ChosenTechnology-EventStreamingBus">Event Streaming Bus</h2><p style="margin-left: 30.0px;">The <a class="external-link" href="https://nats.io/" rel="nofollow">NATS Streaming Server</a> was used as the event bus, because the course I took recommended it as a good starting server for kubernetes</p><h2 id="id-2)ChosenTechnology-Tooling">Tooling</h2><p style="margin-left: 30.0px;">Since this application is developed to run in Kubernetes, I used the following tools</p><ul><li><a class="external-link" href="https://www.docker.com/products/docker-desktop" rel="nofollow">Docker for Desktop</a> - as a development platform and enabling the Kubernetes module</li><li><a class="external-link" href="https://skaffold.dev/" rel="nofollow">Skaffold</a> - to deploy changes automatically when the source code was saved </li><li><a class="external-link" href="https://www.docker.com/" rel="nofollow">Docker</a> - for the container technology</li><li><a class="external-link" href="https://about.gitlab.com/" rel="nofollow">GitLab</a> container registry - used instead of dockerhub since it is free for private registries</li><li><a class="external-link" href="https://github.com" rel="nofollow">GitHub </a>- was used for a git repository and run CICD automated tests and deployments</li><li><a class="external-link" href="https://www.digitalocean.com/" rel="nofollow">Digital Ocean</a> - was used to simulate a production deployment, since this is the cheapest and easiest platform to use.</li><li><a class="external-link" href="https://www.npmjs.com" rel="nofollow">npmjs </a>- to store common node npm modules we develop</li></ul><h2 id="id-2)ChosenTechnology-Phase2">Phase 2</h2><p>During phase 2 of the project I will:</p><ul><li>Add a Management Information Service using MySQL or Postgres</li><li>Create a fully featured front end using MaterialUI in NextJS (1st phase kept it very simplistic so as not to confuse the audience)</li><li>Introduce Prometheus/Grafana monitoring into the kubernetes cluster</li><li>Instrumenting the NodeJS application for Prometheus monitoring</li><li>Add a central logging mechanism (tools yet to be researched)</li><li>All of the tests are at a component level, I need to look at how data can be setup for reliable integration tests in staging, my main worry on testing microservices.</li></ul><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542702/960550976.png">image2020-9-10_13-21-16.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542702/960551010.png">image2020-9-10_13-27-34.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542702/960553986.png">image2020-9-12_14-6-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542702/960553987.png">image2020-9-12_14-7-15.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

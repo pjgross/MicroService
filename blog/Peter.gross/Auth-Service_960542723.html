@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Auth Service</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542721.html">4) System Design</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Auth Service
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 18, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="AuthService-RESTAPI">REST API</h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Route</th><th class="confluenceTh">Method</th><th class="confluenceTh">Body</th><th class="confluenceTh">Purpose</th></tr><tr><td class="confluenceTd">/api/users/signup</td><td class="confluenceTd">POST</td><td class="confluenceTd">{ email: string, password: string }</td><td class="confluenceTd">Sign up for an account</td></tr><tr><td class="confluenceTd">/api/users/signin</td><td class="confluenceTd">POST</td><td class="confluenceTd">{ email: string, password: string }</td><td class="confluenceTd">Sign in to an existing account</td></tr><tr><td class="confluenceTd">/api/users/signout</td><td class="confluenceTd">POST</td><td class="confluenceTd">{}</td><td class="confluenceTd">Sign out</td></tr><tr><td class="confluenceTd">/api/users/currentuser</td><td class="confluenceTd">GET</td><td class="confluenceTd"><br/></td><td class="confluenceTd">Return info about the user</td></tr><tr><td colspan="1" class="confluenceTd">/api/users/ui</td><td colspan="1" class="confluenceTd">GET</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">returns the swagger stats UI</td></tr><tr><td colspan="1" class="confluenceTd">/api/users/metrics</td><td colspan="1" class="confluenceTd">GET</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">prometheus metrics endpoint</td></tr></tbody></table></div><h2 class="auto-cursor-target" id="AuthService-ServiceDependencies">Service Dependencies</h2><h3 class="auto-cursor-target" id="AuthService-EnvironmentVariables">Environment Variables</h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Variable</th><th class="confluenceTh">Purpose</th></tr><tr><td class="confluenceTd">MONGO_URI</td><td class="confluenceTd">The connection string used to connect to the database</td></tr><tr><td class="confluenceTd"><p><span style="color: rgb(0,51,102);">JWT_KEY</span></p></td><td class="confluenceTd">The key used to encrypt the JWT token</td></tr></tbody></table></div><h3 class="auto-cursor-target" id="AuthService-KubernetesSecrets">Kubernetes Secrets</h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Secret</th><th class="confluenceTh">How to setup</th><th colspan="1" class="confluenceTh">Notes</th></tr><tr><td class="confluenceTd"><p><span style="color: rgb(0,51,102);">jwt-secret</span></p></td><td class="confluenceTd"><p>kubectl create secret generic jwt-secret ==from-literal=JWT_KEY=&lt;secret&gt;</p></td><td colspan="1" class="confluenceTd">Required</td></tr><tr><td class="confluenceTd"><p><span style="color: rgb(0,51,102);">regcred</span></p></td><td class="confluenceTd">kubectl create secret docker-registry regcred --docker-server=<a class="external-link" href="http://registry.gitlab.com" rel="nofollow">registry.gitlab.com</a> --docker-username='&lt;username&gt;' --docker-password='&lt;password&gt;'</td><td colspan="1" class="confluenceTd">Required if using your own registry</td></tr></tbody></table></div><h2 class="auto-cursor-target" id="AuthService-AuthenticationDesign">Authentication Design</h2><p class="auto-cursor-target">1) We will use JSON Webtokens to authorise the user to sign into the application, and we will add the users id and email into the token</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.JWT_KEY!
+    )</pre>
+</div></div><p class="auto-cursor-target">2) We use Cookies to transfer the token between the browser and the application, this is because if the client is a server side rendered application you need to pass authentication on the first request</p><p class="auto-cursor-target" style="margin-left: 30.0px;">For each of the rest api end points we need to setup up the cookie session, and before we call any route express middleware we call the currentUser middleware to see whether we got a cookie with the request</p><p class="auto-cursor-target" style="margin-left: 30.0px;">Note: I have not implemented TLS in this example app, but added what to do for production as a comment</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// setup the cookies securing when not in test
+app.use(
+  cookieSession({
+    signed: false,
+    secure: false, //process.env.NODE_ENV !== &quot;test&quot;,
+  })
+)
+// get the current user for every request if signed in
+app.use(currentUser)</pre>
+</div></div><p class="auto-cursor-target">3) The currentUser function adds a currentUser property to the incoming request that the routes can use to see whether a user is signed in</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">export const currentUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) =&gt; {
+  // the ? makes sure req.session is defined
+  // if no session goto next middleware function
+  if (!req.session?.jwt) {
+    return next()
+  }
+  // get details from jwt token telling typescript the format to expect
+  // ignore errors so it just continues to next function
+  try {
+    const payload = jwt.verify(
+      req.session.jwt,
+      process.env.JWT_KEY!
+    ) as UserPayload
+    req.currentUser = payload
+  } catch (err) {}
+  // continue to next middleware
+  next()
+}</pre>
+</div></div><p class="auto-cursor-target">4) Now every request has the users id and email as properties, which we can use for example in a required authentication middleware</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// check that the currentUser exits if not throw error
+export const requireAuth = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) =&gt; {
+  // current-user needs to have been called first
+  if (!req.currentUser) {
+    throw new NotAuthorisedError()
+  }
+  // otherwise continue onto the next middleware
+  next()
+}</pre>
+</div></div><h2 class="auto-cursor-target" id="AuthService-PasswordHashing">Password Hashing</h2><p class="auto-cursor-target">You can not store a users password in plain text in the database, so we hash the password first and have written a helper library to deal with hashing  and comparing entered password to hashed password</p><p class="auto-cursor-target">To hash the password, in this case we use a random salt, but we could have saved a common on in an environment variable, we return the hashed password with the salt used added to the end</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">  static async toHash(password: string) {
+    const salt = randomBytes(8).toString(&quot;hex&quot;)
+    // add as Buffer for typescript to tell it what scryptAsync returned
+    const buf = (await scryptAsync(password, salt, 64)) as Buffer
+    // turn the buffer into a string and add salt onto the end
+    return `${buf.toString(&quot;hex&quot;)}.${salt}`
+  }</pre>
+</div></div><p class="auto-cursor-target">To compare an entered password with the stored hashed password we use</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">  // compare stored hash password to typed in password
+  static async compare(storedPassword: string, suppliedPassword: string) {
+    // split the hashed password and salt from stored password
+    const [hashedPassword, salt] = storedPassword.split(&quot;.&quot;)
+    // add as Buffer for typescript to tell it what scryptAsync returned
+    const buf = (await scryptAsync(suppliedPassword, salt, 64)) as Buffer
+    return buf.toString(&quot;hex&quot;) === hashedPassword
+  }</pre>
+</div></div><h2 class="auto-cursor-target" id="AuthService-DatabaseDesign">Database Design</h2><p class="auto-cursor-target">For an Overview of the Typescript approach to MongoDB read this <a href="MongoDB-Typescript-Implementation-approach_960542844.html">page</a></p><p class="auto-cursor-target">First we do not want to pass even the hashed password back to the requestor when querying the user database</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// defines the mongoDB structure
+// change the default json fields returned by redefining toJSON
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id
+        delete ret._id
+        delete ret.password
+        delete ret.__v
+      },
+    },
+  }
+)</pre>
+</div></div><p class="auto-cursor-target">We also want to make sure there is no chance of storing an unhashed password in the database, to do this we build the hashing of the password into the database schema.  We do this by using a pre-save hook in mongoose</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// run before a user is saved
+// we use the this keyword so cannot use an arrow function
+userSchema.pre(&quot;save&quot;, async function (done) {
+  // if the password was updated then store the hash of it
+  if (this.isModified(&quot;password&quot;)) {
+    const hashed = await Password.toHash(this.get(&quot;password&quot;))
+    this.set(&quot;password&quot;, hashed)
+  }
+  done()
+})</pre>
+</div></div><h2 class="auto-cursor-target" id="AuthService-Monitoring">Monitoring</h2><p class="auto-cursor-target">All services now have a monitoring UI and a prometheus metrics endpoint</p><p class="auto-cursor-target">Here is the screen at  &lt;url&gt;/api/users/ui</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="400" src="attachments/960542723/963478572.png" data-image-src="attachments/960542723/963478572.png" data-unresolved-comment-count="0" data-linked-resource-id="963478572" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-17_13-43-0.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542723" data-linked-resource-container-version="11"></span></p><p class="auto-cursor-target">Here we can see because of the annotations we placed in the deployment file, the prometheus target that has automatically been created</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="85" src="attachments/960542723/963479684.png" data-image-src="attachments/960542723/963479684.png" data-unresolved-comment-count="0" data-linked-resource-id="963479684" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-17_19-22-42.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542723" data-linked-resource-container-version="11"></span></p><p class="auto-cursor-target">We use the Swagger-stats package to use this and the following code has been added to the app.ts for each restapi</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// add the swagger and prometheus metrics
+// /api/users/ui  for the swagger stats ui
+// /api/users/metrics for the prometheus endpoint
+app.use(
+  swStats.getMiddleware({
+    uriPath: &quot;/api/users&quot;,
+  })
+)</pre>
+</div></div><p class="auto-cursor-target">and to get the auth end point accessible from prometheus in kubernetes, these annotations were added to the deployment file</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+      annotations:
+        prometheus.io/scrape: &quot;true&quot;
+        prometheus.io/path: &quot;/api/users/metrics&quot;
+        prometheus.io/port: &quot;3000&quot;</pre>
+</div></div><div class="confluence-information-macro confluence-information-macro-information"><p class="title">For Info</p><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>I have placed the Kubernetes Manifest files i used to install prometheus and Grafana in the infra directory, so you can see the settings i used</p></div></div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542723/963478572.png">image2020-9-17_13-43-0.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542723/963479683.png">image2020-9-17_19-11-51.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542723/963479684.png">image2020-9-17_19-22-42.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 1) Introduction</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 1) Introduction
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 17, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<h2 id="id-1)Introduction-Index">Index</h2><p><br/></p><p><ul class='childpages-macro'><li><a href="960553350.html">1) What I am trying to accomplish</a></li><li><a href="960553333.html">2) Martin Fowlers guidelines on Microservices</a></li><li><a href="960553393.html">3) 12 Factor App - Design principles from SOA</a></li></ul></p><p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h3 id="id-1)Introduction-WhatIwantedtoachievewas:">What I wanted to achieve was:</h3><ul><li>Be able to deploy new/updated functionality without having to deploy the whole application again (which is what we see with hybris as an example)</li><li>Be able to test these components with confidence without having to run full end to end tests of the complete infrastructure</li><li>Be able to develop locally and deploy to production without running into too many platform differences</li></ul><p><br/></p><h3 id="id-1)Introduction-WhatItriedforplatform">What I tried for platform</h3><ul><li>I tried serverless functions on AWS, and while the running costs were minimal,  I ran into development costs on free tier due to copying code locally to S3 to deploy.  I ran out of data transfer after only 4 days.  The alternative was to develop wholly on AWS to avoid the data transfer costs, but hated their development tools, so i looked elsewhere for this learning exercise, leaving serverless for my chatbot developments</li><li>I then tried docker containers (which i have been using for years) and looked at orchestration tools such as ECS and Kubernetes.  Since you cannot develop ECS locally, docker for desktop comes with a Kubernetes cluster on any Windows 10 pro or Mac computer. it was an easy choice to go with Kubernetes. <ul><li>I found it really easy to develop locally and then deploy to the cloud (google in my case since kubernetes is covered by their free credit scheme unlike AWS, and Digital Ocean the easiest and cheapest platform to use), with the main differences being around security and infrastructure, with no changes to the containers as long as all config is setup via environment variables</li><li>Skaffold allows you to easily develop and see your changes without having to rebuild the containers, making working with Kubernetes as easy as working with docker containers individually</li><li>Googles documentation for Kubernetes is brilliant, and the training available is far superior to ECS.</li><li>The main advantage to ECS was the level of integration with AWS services, and since I had no intention of running on AWS for my own projects, ECS was easily ruled out (although I have some courses lined up so I can at least become familiar with it)</li><li>Looking at some cloud providers for costs and how easy to use they are</li></ul></li></ul><p style="margin-left: 60.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="180" src="attachments/960542694/960553951.png" data-image-src="attachments/960542694/960553951.png" data-unresolved-comment-count="0" data-linked-resource-id="960553951" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-7_9-9-56.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542694" data-linked-resource-container-version="8"></span> </p><p style="margin-left: 90.0px;">In the end I mainly use Virtual Box to create 3 nodes with 16gb of memory and 6 cpus each, and only use the cloud for learning purposes, when working with GitHub i used Digital Ocean and when working with GitLab I am trying out their integrations with Google Cloud.</p><p style="margin-left: 150.0px;"><br/></p><h3 id="id-1)Introduction-DesignApproach">Design Approach</h3><ul><li>Early on I lost focus and more interested in seeing what these Service Meshes were all about, and started breaking all functions out into their own services, using Istio to handle the communications between them.  However, It did not take long for twenty services to appear with nested dependencies, and changes to one service to crash others I was not expecting.<ul><li>Note that this is not the fault of this approach to micro-services, but going immediately to small services leads to configuration management issues, and a constant redesign of existing services which slowed everything down;</li><li>The Istio installation installed Prometheus and Jaegar, which helped with the service discovery and monitoring and deployments were reliable, but going immediately to low level services was a mistake and I was not achieving the results I wanted</li></ul></li><li>I then decided to start with functional services, using recommendations from courses and google searching I went with these principles:<ul><li>Each Service will have its own database, and not access a central database (common agreement that this is the only way to achieve independent services)</li><li>I would create a REST API to use handle requests from the clients (I will use graphql later)</li><li>Each service would not talk directly to any other, instead using event streaming to handle communications (Again recommended if you wanted independent services)</li></ul></li></ul><p><br/></p><h3 id="id-1)Introduction-Technology"> Technology</h3><ul><li>I know Python and JavaScript, but since I wanted for this exercise to use the one I was most comfortable with for front end and back end development, I choose to Use ReactJS for the front end (actually NextJS but you will see why later) and NodeJS for the back end (using Typescript, again you will see why later)</li><li>I needed a multi platform streaming service that will allow, <ul><li>Group services so events are only sent to one copy of the service</li><li>Allow for messages to be sent to services that were offline </li><li>Allow new services to receive the events that they would have received if they were implemented at the start</li><li>Is part of the <a class="external-link" href="https://landscape.cncf.io" rel="nofollow">cncf</a></li></ul></li></ul><p style="margin-left: 60.0px;">So I used NATs Streaming service</p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542694/960542697.png">image2020-9-4_19-21-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542694/960542698.png">image2020-9-4_19-31-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542694/960542699.png">image2020-9-4_19-38-18.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542694/960553951.png">image2020-9-7_9-9-56.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

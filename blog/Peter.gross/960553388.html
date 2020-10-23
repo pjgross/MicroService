@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 8) Design for failure</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542694.html">1) Introduction</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553333.html">2) Martin Fowlers guidelines on Microservices</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 8) Design for failure
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 15, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>Moving away from single large monoliths to many smaller components means there are more moving parts</p><ul><li>Handling network traffic becomes a bigger concern</li><li>There is alot that can go wrong</li><li>The service must assume failure can happen and handle it gracefully</li><li>Logging and Monitoring should be in place from the first service</li></ul><p><br/></p><p>This is why there is growing support for handling some of these issues for you:</p><p>Service meshs</p><ul><li>DevOps gain visibility into the microservices.</li><li>Application-wide TLS can be applied instantly.</li><li>Controlled deployment (canary, blue/green) is possible with granular traffic control.</li><li>Detect service failures and avoid them with circuit breakers.</li></ul><p>Message queues</p><ul><li>Publish your key events and not worry about who uses them, great for service decoupling</li><li>If a service goes off line or a new service is added, it can receive all messages it has missed, which is great for handling service outages.</li></ul><p>Kubernetes</p><ul><li>You design a service state, and kubernetes will keep the services running to that state, automatically restarting services if they fall over</li><li>Decouples service communications by communicating to service wrappers, so you do not have to know where that service is located</li></ul><p><br/></p><p>Motivation</p><ul><li>Increase the services reliability</li></ul><p><br/></p><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553388/960553916.png">image2020-9-12_10-23-58.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553388/960553917.png">image2020-9-12_10-24-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553388/960553918.png">image2020-9-12_10-24-59.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553388/960553919.png">image2020-9-12_10-25-27.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553388/960553920.png">image2020-9-12_10-26-3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553388/960553921.png">image2020-9-12_10-26-37.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

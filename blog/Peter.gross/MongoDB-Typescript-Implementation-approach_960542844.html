@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : MongoDB Typescript Implementation approach</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542721.html">4) System Design</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : MongoDB Typescript Implementation approach
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 06, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>As with all all MongoDB NodeJS application i have used the mongoose module to integrate with the database.</p><p>Unfortunately mongoose is not the friendliest library to use with Typescript, so here is the approach we used.</p><p><br/></p><p>Define an Interface describing fields used when creating a record, we use this in our build function</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// the attributes to setup the data
+interface TicketAttrs {
+  id: string
+  title: string
+  price: number
+}</pre>
+</div></div><p><br/></p><p>Define an Interface describing the fields in the stored record, mongoose only documents the defaults so we dont need to add any of these, but since we have renamed __v to version, we have to include this field.</p><p>Also include any record level functions you have defined</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// the attributes on the stored document
+// remember to add version since the default is __v
+export interface TicketDoc extends mongoose.Document {
+  title: string
+  price: number
+  version: number
+  isReserved(): Promise&lt;boolean&gt;
+}
+ticketSchema.methods.isReserved = async function () {
+  // this === the ticket document that we just called &#39;isReserved&#39; on
+  const existingOrder = await Order.findOne({
+    ticket: this,
+    status: {
+      $in: [
+        OrderStatus.Created,
+        OrderStatus.AwaitingPayment,
+        OrderStatus.Complete,
+      ],
+    },
+  })
+
+  return !!existingOrder
+}</pre>
+</div></div><p>Extend the model definition to add any functions we have added at the model level</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// add the build function to schema definition for typescript
+interface TicketModel extends mongoose.Model&lt;TicketDoc&gt; {
+  build(attrs: TicketAttrs): TicketDoc
+  findByEvent(event: { id: string; version: number }): Promise&lt;TicketDoc | null&gt;
+}
+
+// add function to the Model to find a ticket with the previous version number
+// the data it receives must have an id and version fields defined here in typescript
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) =&gt; {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  })
+}
+// the function to build a new ticket to the Model mapping input id to _id
+ticketSchema.statics.build = (attrs: TicketAttrs) =&gt; {
+  return new Ticket({
+    _id: attrs.id,
+    title: attrs.title,
+    price: attrs.price,
+  })
+}</pre>
+</div></div><p>For any table we are automatically incrementing the version number on the records we use the following code to use the 'mongoose-update-if-current'</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import { updateIfCurrentPlugin } from &quot;mongoose-update-if-current&quot;
+// set the version key to version instead of __v the default
+ticketSchema.set(&quot;versionKey&quot;, &quot;version&quot;)
+// start using the mongoose-update-if-current plugin to autoincrement the version no&#39;s
+ticketSchema.plugin(updateIfCurrentPlugin)</pre>
+</div></div><p>Then declare the mongoose model to pass to our application, passing in the record and model definitions for typescript as well as the normal mongoose parameters</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">const Ticket = mongoose.model&lt;TicketDoc, TicketModel&gt;(&quot;Ticket&quot;, ticketSchema)</pre>
+</div></div><p><br/></p><p>This approach now allows for full typescript help in your code editor</p><p><br/></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" src="attachments/960542844/960542922.png" data-image-src="attachments/960542844/960542922.png" data-unresolved-comment-count="0" data-linked-resource-id="960542922" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-6_20-55-53.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542844" data-linked-resource-container-version="2"></span></p><p>To create a new record we have created a build function on the Model, which is an approach i like when we are mapping id to _id in the database so in your code to use this approach you will use</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">    // Build the order and save it to the database
+    const order = Order.build({
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket,
+    })
+    await order.save()</pre>
+</div></div><p><br/></p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542844/960542920.png">image2020-9-6_20-54-16.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542844/960542921.png">image2020-9-6_20-55-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542844/960542922.png">image2020-9-6_20-55-53.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

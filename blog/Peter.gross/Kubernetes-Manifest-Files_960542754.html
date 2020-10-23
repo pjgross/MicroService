@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Kubernetes Manifest Files</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542706.html">3) Design Considerations</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553940.html">6) Other design considerations</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Kubernetes Manifest Files
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 14, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h2 id="KubernetesManifestFiles-Directories">Directories</h2><p><br/></p><p>Since some of the people that may read this blog will not be experts in Kubernetes, I have decided to split them out into three directories</p><p><br/></p><p>1) Dev</p><p style="margin-left: 30.0px;">These kubernetes files are as simple as possible and create as few resources as possible, so people running minikube or docker for desktop have a chance of running them on their machines.</p><p style="margin-left: 30.0px;">I still use configmaps and secrets for managing environment variables, since this good practice should be applied from the start.</p><p style="margin-left: 30.0px;">They also have been changed to use dockerhub as the container repository, again to keep it as simple as possible.</p><p>2) Staging</p><p style="margin-left: 30.0px;">These are the files I use on my local kubernetes cluster, they include:</p><ul><li>Node affinity to keep the databases close to their services;</li><li>Initialisation checks that the databases are up before bring the service up</li><li>Storage volumes to persist the data, the dev only stores in the container and will be lost when deleting the containers</li><li>Use of a private container repository on GitLab</li></ul><p>3) Production</p><p style="margin-left: 30.0px;">Until I formally choose a permanent platform for anything I produce, this will actually be a play area for deploying to various cloud providers, so this blog will not cover any of the things you may see in this directory</p><p>These files have been placed in the infra directory</p><p style="margin-left: 120.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="400" src="attachments/960542754/960554869.png" data-image-src="attachments/960542754/960554869.png" data-unresolved-comment-count="0" data-linked-resource-id="960554869" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-14_11-12-1.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542754" data-linked-resource-container-version="3"></span></p><h2 id="KubernetesManifestFiles-Skaffold">Skaffold</h2><p>The skaffold config file has been configured to use the k8s-dev directory and pull its images from my dockerhub account</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">apiVersion: skaffold/v2beta2
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s-dev/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: petegross/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+        target: dev
+      sync:
+        manual:
+          - src: &quot;src/**/*.ts&quot;
+            dest: .</pre>
+</div></div><h2 class="auto-cursor-target" id="KubernetesManifestFiles-GitHubworkflows">GitHub workflows</h2><p class="auto-cursor-target">The github deployment of the manifests workflow however is looking for changes to the production files, for example here is the version iused to push to DigitalOcean</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">name: deploy-manifests
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - &#39;infra/k8s-prod/**&#39;
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubectl apply -f infra/k8s-prod</pre>
+</div></div></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542754/960554869.png">image2020-9-14_11-12-1.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : NextJS Rest call issues in Kubernetes</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542706.html">3) Design Considerations</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553930.html">5) Client Design</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : NextJS Rest call issues in Kubernetes
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 14, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+</div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>In NextJS, there is a setup function for each page called getInitialProps, where you can populate the page with data before returning the rendered page to the client.  This is what makes Server Side Rendered pages a lot better for Search Engine Optimisations.</p><p>However, this function is not always called on the server, but sometimes on the client, which affects how you call the REST Endpoint.</p><p class="auto-cursor-target">When you are on the client you will just use the REST path without the domain as the quickest way of navigating since it defaults to the current domain.</p><p class="auto-cursor-target">However on the server you will want to talk to the Ingress load balancer so the proxy routing is done correctly within the kubernetes cluster</p><p class="auto-cursor-target">Also you will want to copy the headers(for the cookie) from the initial request onto the API request which is automatically done on the clients browser.</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 30.0px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Request Source</th><th class="confluenceTh">Where getInitialProps is executed</th><th colspan="1" class="confluenceTh">Root path to call REST API's</th></tr><tr><td class="confluenceTd">Hard Refresh of Page</td><td rowspan="3" style="text-align: center;" class="confluenceTd"><p><br/></p><p>Executed on the Server<br/><br/><br/></p></td><td rowspan="3" class="confluenceTd"><p>The kubernetes internal address of your loadbalancer e.g.</p><p><span style="color: rgb(206,145,120);"><a class="external-link" href="http://ingress-nginx-controller.ingress-nginx.svc.cluster.local" rel="nofollow">http://ingress-nginx-controller.ingress-nginx.svc.cluster.local</a></span></p></td></tr><tr><td class="confluenceTd">Clicking a link from a different domain</td></tr><tr><td class="confluenceTd">Typing URL into browser</td></tr><tr><td class="confluenceTd">Navigating links within App</td><td style="text-align: center;" class="confluenceTd">Executed on Client</td><td colspan="1" class="confluenceTd"><p>/</p></td></tr></tbody></table></div><p class="auto-cursor-target">See implementation details <a href="Client-Service_960542725.html">here</a></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

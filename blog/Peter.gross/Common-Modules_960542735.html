@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Common Modules</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542721.html">4) System Design</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Common Modules
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 14, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>The common modules have been defined as an npm module and can be found din the common directory.</p><p><br/></p><p>There are three main components that have been stored in this common library</p><p><br/></p><p>1) The. <a href="Standardised-Errors_960542737.html">common Error</a> functions</p><div id="expander-725589139" class="expand-container"><div id="expander-control-725589139" class="expand-control"><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down"></span><span class="expand-control-text">Notes...</span></div><div id="expander-content-725589139" class="expand-content"><p>We define a coomon base custom error</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">// an abstract class all of our custom error inherit from
+export abstract class CustomError extends Error {
+  abstract statusCode: number
+  constructor(message: string) {
+    super(message)
+    // only because we are extending a built in class
+    Object.setPrototypeOf(this, CustomError.prototype)
+  }
+  abstract serializeErrors(): { message: string; field?: string }[]
+}</pre>
+</div></div><p>Which we then create our specific error from</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import { ValidationError } from &quot;express-validator&quot;
+import { CustomError } from &quot;./custom-error&quot;
+
+export class RequestValidationError extends CustomError {
+  statusCode = 400
+  constructor(public errors: ValidationError[]) {
+    super(&quot;Invalid auth request parameters&quot;)
+    // only because we are extending a built in class
+    Object.setPrototypeOf(this, RequestValidationError.prototype)
+  }
+
+  serializeErrors = () =&gt; {
+    return this.errors.map((error) =&gt; {
+      return { message: error.msg, field: error.param }
+    })
+  }
+}</pre>
+</div></div><p>Our express error handler then deals with the errors</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import { Request, Response, NextFunction } from &quot;express&quot;
+// import error handlers
+import { CustomError } from &quot;../errors/custom-error&quot;
+
+// all express middleware with 4 parameteres is an errorhandler
+// This will catch all errors that were throw as part of dealig with a request
+export const errorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) =&gt; {
+  // check to see whether one of our custom errors was thrown
+  if (err instanceof CustomError) {
+    return res.status(err.statusCode).send({ errors: err.serializeErrors() })
+  }
+  // otherwise throw a generic error
+  // make sure we log the error to console
+  console.error(err)
+  res.status(400).send({
+    errors: [{ message: &quot;Unhandled error occurred&quot; }],
+  })
+}</pre>
+</div></div></div></div><p class="auto-cursor-target">2) The Event Definitions</p><div id="expander-1078462819" class="expand-container"><div id="expander-control-1078462819" class="expand-control"><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down"></span><span class="expand-control-text">Notes...</span></div><div id="expander-content-1078462819" class="expand-content"><p>This section has the base Nats Listener class</p><div id="expander-2121317681" class="expand-container"><div id="expander-control-2121317681" class="expand-control"><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down"></span><span class="expand-control-text">Code...</span></div><div id="expander-content-2121317681" class="expand-content"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import { Message, Stan } from &quot;node-nats-streaming&quot;
+import { Subjects } from &quot;./subjects&quot;
+
+// define a generic event template
+interface Event {
+  subject: Subjects
+  data: any
+}
+
+// base Listener class
+export abstract class Listener&lt;T extends Event&gt; {
+  abstract subject: T[&quot;subject&quot;]
+  abstract queueGroupName: string
+  abstract onMessage(data: T[&quot;data&quot;], msg: Message): void
+
+  protected client: Stan
+  protected ackWait = 5 * 1000
+
+  // pass in the NATS server connection
+  constructor(client: Stan) {
+    this.client = client
+  }
+  // setup the subscription options we need
+  subscriptionOptions() {
+    return this.client
+      .subscriptionOptions()
+      .setDeliverAllAvailable()
+      .setManualAckMode(true)
+      .setAckWait(this.ackWait)
+      .setDurableName(this.queueGroupName)
+  }
+  // define subscription and start listening
+  listen() {
+    const subscription = this.client.subscribe(
+      this.subject,
+      this.queueGroupName,
+      this.subscriptionOptions()
+    )
+    // define what to do when a message is received
+    subscription.on(&quot;message&quot;, (msg: Message) =&gt; {
+      console.log(`Message received: ${this.subject} / ${this.queueGroupName}`)
+      // get the data from the message
+      const parsedData = this.parseMessage(msg)
+      // invoke the passed in action with the data and original message
+      this.onMessage(parsedData, msg)
+    })
+  }
+  // define a helper function to parse the message data catering for strings and buffers
+  parseMessage(msg: Message) {
+    const data = msg.getData()
+    return typeof data === &quot;string&quot;
+      ? JSON.parse(data)
+      : JSON.parse(data.toString(&quot;utf8&quot;))
+  }
+}
+
+</pre>
+</div></div></div></div><p class="auto-cursor-target">The base Nats publisher class</p><div id="expander-549857209" class="expand-container"><div id="expander-control-549857209" class="expand-control"><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down"></span><span class="expand-control-text">Code...</span></div><div id="expander-content-549857209" class="expand-content"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import { Stan } from &quot;node-nats-streaming&quot;
+import { Subjects } from &quot;./subjects&quot;
+
+// define a generic event template
+interface Event {
+  subject: Subjects
+  data: any
+}
+
+// an abstract publisher to NATS class
+export abstract class Publisher&lt;T extends Event&gt; {
+  abstract subject: T[&quot;subject&quot;]
+  protected client: Stan
+
+  constructor(client: Stan) {
+    this.client = client
+  }
+
+  publish(data: T[&quot;data&quot;]): Promise&lt;void&gt; {
+    // return a promise so we can await to see whether there was an error
+    return new Promise((resolve, reject) =&gt; {
+      // publish to the subject channel with the data passed in turning it from object to string
+      this.client.publish(this.subject, JSON.stringify(data), (err) =&gt; {
+        // check whether publish returned an error or not
+        if (err) {
+          return reject(err)
+        }
+        console.log(&quot;Event published to subject&quot;, this.subject)
+        // Nats published worked so we can return control to caller
+        resolve()
+      })
+    })
+  }
+}</pre>
+</div></div></div></div><p class="auto-cursor-target">The list of Nats channels/subjects</p><div id="expander-896185948" class="expand-container"><div id="expander-control-896185948" class="expand-control"><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down"></span><span class="expand-control-text">Code...</span></div><div id="expander-content-896185948" class="expand-content"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">export enum Subjects {
+  TicketCreated = &quot;ticket:created&quot;,
+  TicketUpdated = &quot;ticket:updated&quot;,
+
+  OrderCreated = &quot;order:created&quot;,
+  OrderCancelled = &quot;order:cancelled&quot;,
+
+  ExpirationComplete = &quot;expiration:complete&quot;,
+
+  PaymentCreated = &quot;payment:created&quot;,
+}</pre>
+</div></div></div></div><p class="auto-cursor-target">The data defintions for each of the events that can occur</p><div id="expander-2147480142" class="expand-container"><div id="expander-control-2147480142" class="expand-control"><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down"></span><span class="expand-control-text">example</span></div><div id="expander-content-2147480142" class="expand-content"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import { Subjects } from &quot;./subjects&quot;
+
+// ties the TicketCreated event to the data we expect on that event
+export interface TicketCreatedEvent {
+  subject: Subjects.TicketCreated
+  data: {
+    id: string
+    version: number
+    title: string
+    price: number
+    userId: string
+    orderId?: string
+  }
+}</pre>
+</div></div></div></div></div></div><p class="auto-cursor-target">3) The custom express middleware of REST api uses.</p><p class="auto-cursor-target" style="margin-left: 30.0px;">These have been split into four functions</p><ul><li class="auto-cursor-target">Retrieving current user</li><li class="auto-cursor-target">Express error handler</li><li class="auto-cursor-target">Required authentication (for routes requiring a signed in user)</li><li class="auto-cursor-target">Validate request handler - used with the express-validator module we are using</li></ul></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 3) Design Considerations</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 3) Design Considerations
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 12, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<h2 id="id-3)DesignConsiderations-Topicscovered">Topics covered</h2><p><br/></p><p><ul class='childpages-macro'><li><a href="960553932.html">1) Meeting Microservice Guidelines</a></li><li><a href="960542708.html">2) Data stored in each service</a></li><li><a href="960542710.html">3) Handling Concurrency Issues</a></li><li><a href="960553937.html">4) Standardise Some Implementation Requirements</a></li><li><a href="960553930.html">5) Client Design</a></li><li><a href="960553940.html">6) Other design considerations</a></li></ul></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>This section highlights the design considerations I learnt while developing this example application</p><p><br/></p><p>The basic design is to have a system where:</p><ul><li>Any user can put tickets up for sale for a price</li><li>Anyone can create an order for a ticket, which would<ul><li>lock other users out from buying the ticket</li><li>have a timer so the order would be cancelled after 15 minutes if not paid for</li></ul></li><li>Allow the user to pay for the order</li><li>Provide Authentication that can cope with client and server side rendering</li><li>Have all of these services only talk through asynchronous event bus messaging</li><li>Have the clients only talk to a single end point, so a proxy service will be needed</li><li>Have each service handle its own REST api routing, application logic and database management</li></ul><p><br/></p><p>The basic design to fulfil this came out like this</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="750" src="attachments/960542706/960543552.png" data-image-src="attachments/960542706/960543552.png" data-unresolved-comment-count="0" data-linked-resource-id="960543552" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-7_11-8-55.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542706" data-linked-resource-container-version="4"></span></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542706/960543552.png">image2020-9-7_11-8-55.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

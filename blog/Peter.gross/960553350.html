@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 1) What I am trying to accomplish</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542694.html">1) Introduction</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 1) What I am trying to accomplish
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 13, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>As I have been developing applications, I have followed a standard pattern of writing a ReactJS front end that ran in the browser and a NodeJS backend that stored all of the data in a single database.</p><p><br/></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="202" src="attachments/960553350/960553351.png" data-image-src="attachments/960553350/960553351.png" data-unresolved-comment-count="0" data-linked-resource-id="960553351" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-4_19-21-11.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553350" data-linked-resource-container-version="5"></span></p><p>This was ok for small developments, but as i said in the introduction it meant that any small change meant a complete deployment of the application, especially any database changes.</p><p><br/></p><p>My first attempt at microservices was to split out all major functions into their own services, and even in a small application i quickly ended up with twenty services.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="750" src="attachments/960553350/960553352.png" data-image-src="attachments/960553350/960553352.png" data-unresolved-comment-count="0" data-linked-resource-id="960553352" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-4_19-31-26.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553350" data-linked-resource-container-version="5"></span></p><p>The major downsides of this approach was:</p><ul><li>The services were not isolated from one another, and I occasionally broke a service I was not making a change for;</li><li>Going too early to small services resulted in a lot of design iterations, I should have written a lot more of the application first, then looked at breaking out services where they made sense;</li><li>Testing was more complex, and I ended up running a complete regression test on every pull request;</li><li>The approach to where data was stored was not obvious and I ended up using a central database again;</li><li>It got complex very fast, next time I would have to look at configuration management techniques at the start.</li></ul><p>The good points:</p><ul><li>Most of the good points were coming out of using Istio as a service Mesh:<ul><li>Live deployments were easy;</li><li>Handling A/B deployments were easy;</li><li>The service mesh handled all failed calls for me and retried until the down service was back up;</li><li>Transaction throttling was handled by the service mesh.</li></ul></li></ul><p style="margin-left: 30.0px;">All of these things were no longer available when using the Queue service.  I will look into envoy and kafka integration in phase 3.</p><p><br/></p><p>After watching the NR Tech Academy <a class="external-link" href="https://web.microsoftstream.com/video/a024e347-98fc-42b1-a8a9-f5f27163a5f6" rel="nofollow">Introduction to Microservices</a> and doing some reading on the Internet I decided to change my approach.</p><p>I would:</p><ul><li>Create a service for each of the business functions I wanted to create, with the complete authorisation, routing, app logic and data required for that function to work without needing any other services;</li><li>These services would not talk directly with one another (which would introduce dependencies), instead they will communicate asynchronously through an event bus;</li><li>The services would have a REST API to allow the clients to consume their services;</li><li>Use Kubernetes to develop these services, so I could develop locally with confidence that it would deploy to the cloud easily</li></ul><p><br/></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="750" src="attachments/960553350/960553353.png" data-image-src="attachments/960553350/960553353.png" data-unresolved-comment-count="0" data-linked-resource-id="960553353" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-4_19-38-18.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553350" data-linked-resource-container-version="5"></span></p><p><br/></p><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553350/960553351.png">image2020-9-4_19-21-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553350/960553352.png">image2020-9-4_19-31-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553350/960553353.png">image2020-9-4_19-38-18.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

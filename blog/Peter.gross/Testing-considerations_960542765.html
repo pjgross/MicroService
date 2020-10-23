@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Testing considerations</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542706.html">3) Design Considerations</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553940.html">6) Other design considerations</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Testing considerations
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 15, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p><p><br/></p><p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>I decided to follow the courses approach and test each of the services individually</p><ul><li>Testing all RESP API's</li><li>Testing the send and receiving of events</li><li>Testing the service standalone mocking/stubbing the external services</li></ul><p><br/></p><p>In a future phase I will try and automate the testing of the whole application</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image confluence-external-resource" alt="image2020-9-6_10-39-45.png" src="attachments/960542721/960542832.png" data-image-src="https://confluence.tuigroup.com/download/attachments/960542721/image2020-9-6_10-39-45.png?version=1&amp;modificationDate=1599385186000&amp;api=v2"></span></p><p>With Jest I was able to:</p><ul><li>Automate the testing of the individual component</li><li>Allow CICD pipelines to invoke the testing when creating a pull request</li><li>Fake the MongoDB using the inMemory Mongodb and cookie creation</li><li>Mock the Stripe service and Messaging service</li></ul><p>The key area of concern is how to do the end to end testing with consistent data. </p><p>The approach i have taken with the services having their own databases, means they have to be insync or the tests will fail. </p><p>Some early experiments involved creating the data via test scripts to simulate the entry of data, but i have concerns as to how this scales in a large system.  This is an area for me to research.</p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542765/960554007.png">image2020-9-12_15-20-1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542765/960554008.png">image2020-9-12_15-21-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542765/960554009.png">image2020-9-12_15-22-34.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

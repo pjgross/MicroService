@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Cross-Cutting Services</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542706.html">3) Design Considerations</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553937.html">4) Standardise Some Implementation Requirements</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Cross-Cutting Services
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 13, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p><p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>Starting the development of the business function services first is one of the listed biggest mistakes that companies make when transitioning to micro-services.</p><p>There are services that cut across the business functions that should be made available for everyone to use, and these should form part of the  initial developments.</p><p><br/></p><p>Examples of these services are:</p><ul><li>Logging</li><li>Monitoring</li><li>Caching</li><li>Authentication/Authorisation</li><li>Management Information/ Data lake integration</li></ul><p>These types of services should be made available to the product teams, so they can concentrate on providing business benefit for their users.</p><p><br/></p><h2 id="Cross-CuttingServices-Exampleforthisapplication">Example for this application</h2><p><br/></p><p>Kubernetes automatically logs all of the output to console that our containers output.  So for phase 1 I just decided to log all errors to console and use the kubernetes dashboard to monitor the logs.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" src="attachments/960554016/960554017.png" data-image-src="attachments/960554016/960554017.png" data-unresolved-comment-count="0" data-linked-resource-id="960554017" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-12_16-52-20.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960554016" data-linked-resource-container-version="3"></span></p><p><br/></p><p>However, This does not alert me to issues happening, or provide easy traceability of issues going on so in phase 2 I will have to develop a central logging service which allows me to analyse the logs</p><p><br/></p><p style="margin-left: 120.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="450" src="attachments/960554016/960554059.png" data-image-src="attachments/960554016/960554059.png" data-unresolved-comment-count="0" data-linked-resource-id="960554059" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-12_21-56-59.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960554016" data-linked-resource-container-version="3"></span></p><p>To analyse the logs, I will also have to work out how to follow the flow of information through the services.</p><p style="margin-left: 90.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="400" src="attachments/960554016/960554020.png" data-image-src="attachments/960554016/960554020.png" data-unresolved-comment-count="0" data-linked-resource-id="960554020" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-12_16-56-51.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960554016" data-linked-resource-container-version="3"></span></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960554016/960554017.png">image2020-9-12_16-52-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960554016/960554018.png">image2020-9-12_16-52-53.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960554016/960554020.png">image2020-9-12_16-56-51.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960554016/960554059.png">image2020-9-12_21-56-59.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

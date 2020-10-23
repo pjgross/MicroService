@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : Standardised Errors</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542706.html">3) Design Considerations</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553937.html">4) Standardise Some Implementation Requirements</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : Standardised Errors
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 13, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>It should be simple to consume your services, but if each service can define their own format for sending errors back from the calls to their REST api's then you are making the lives of your developers alot more complex.</p><p>For example if you have three services that the client can call, but all three have slightly different error formats, then the client has to build this logic into their end for your service.  This is idiotic</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="400" src="attachments/960542737/960554122.png" data-image-src="attachments/960542737/960554122.png" data-unresolved-comment-count="0" data-linked-resource-id="960554122" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-13_14-32-27.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542737" data-linked-resource-container-version="3"></span></p><p><br/></p><p>From our application we will standardise on the following format</p><blockquote><p><span style="color: rgb(0,0,0);">{&quot;errors&quot;:[</span></p><p><span style="color: rgb(0,0,0);">     {&quot;message&quot;:&quot;&lt;Error message&gt;&quot;, </span><span style="color: rgb(0,0,0);">&quot;field&quot;:&quot;&lt;optional field indicator&gt;&quot;}</span></p><p><span style="color: rgb(0,0,0);">]}</span></p></blockquote><p><span style="color: rgb(0,0,0);">example expected result from invalid signin fields being entered</span></p><p><span style="color: rgb(0,0,0);">           {&quot;errors&quot;:[</span></p><p><span style="color: rgb(0,0,0);">               {&quot;message&quot;:&quot;Email must be valid&quot;,&quot;field&quot;:&quot;email&quot;},</span></p><p><span style="color: rgb(0,0,0);">               {&quot;message&quot;:&quot;Password must be between 4 and 20 characters&quot;,&quot;field&quot;:&quot;password&quot;}</span></p><p><span style="color: rgb(0,0,0);">           ]}</span></p><p><span style="color: rgb(0,0,0);">example expected result from invalid signin credentials supplied</span></p><p><span style="color: rgb(0,0,0);">           {&quot;errors&quot;:[</span></p><p><span style="color: rgb(0,0,0);">               {&quot;message&quot;:&quot;Invalid credentials&quot;}</span></p><p><span style="color: rgb(0,0,0);">           ]}</span></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542737/960554122.png">image2020-9-13_14-32-27.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

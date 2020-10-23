@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 4) Smart endpoints. and dumb pipes</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542694.html">1) Introduction</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960553333.html">2) Martin Fowlers guidelines on Microservices</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 4) Smart endpoints. and dumb pipes
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 15, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>The problem with the SOA archicture was there was too much logic built into the ESB, which made them complicated and very expensive</p><p><br/></p><p>In Microservices all of the logic is in the end points, and the communication channels are relatively dumb, and are modeled around web based protocals like REST, Graphql and GRPc.</p><p><br/></p><p>Typically each of the services will have a public REST api that they can talk to each other over</p><p style="margin-left: 30.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" src="attachments/960553378/960557191.png" data-image-src="attachments/960553378/960557191.png" data-unresolved-comment-count="0" data-linked-resource-id="960557191" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-15_11-42-20.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553378" data-linked-resource-container-version="4"></span></p><p>Although we normally use other services to insulate the services so they don't know have to know exactly where the other services are located.</p><p>Typically using a service mesh for synchronous communication or a message queue for asynchronous communications.</p><p><br/></p><p>Notes:</p><ul><li>Direct connections between services is not a good idea</li></ul><p style="margin-left: 60.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" src="attachments/960553378/960557196.png" data-image-src="attachments/960553378/960557196.png" data-unresolved-comment-count="0" data-linked-resource-id="960557196" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-15_11-45-32.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553378" data-linked-resource-container-version="4"></span></p><ul><li>It is better to use a discovery service</li></ul><p style="margin-left: 60.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" src="attachments/960553378/960557198.png" data-image-src="attachments/960553378/960557198.png" data-unresolved-comment-count="0" data-linked-resource-id="960557198" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-15_11-46-8.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553378" data-linked-resource-container-version="4"></span></p><ul><li>or a gateway</li></ul><p style="margin-left: 60.0px;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" src="attachments/960553378/960557199.png" data-image-src="attachments/960553378/960557199.png" data-unresolved-comment-count="0" data-linked-resource-id="960557199" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-15_11-46-37.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960553378" data-linked-resource-container-version="4"></span></p><p>Each product team concentrates on the services they have advertised on their public api, and the message they send and receive from the message bus.</p><p>This should make the development alot simpler than SOA's ESB architecture.</p><p><br/></p><p>Motivation</p><ul><li>Accelerate development</li><li>Make the app easier to maintain</li></ul><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553801.png">image2020-9-11_17-28-18.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553803.png">image2020-9-11_17-30-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553804.png">image2020-9-11_17-31-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553805.png">image2020-9-11_17-31-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553809.png">image2020-9-11_17-32-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553813.png">image2020-9-11_17-33-14.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553962.png">image2020-9-12_12-31-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553964.png">image2020-9-12_12-32-35.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553965.png">image2020-9-12_12-33-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553967.png">image2020-9-12_12-36-28.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553968.png">image2020-9-12_12-38-46.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960553969.png">image2020-9-12_12-40-30.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960557191.png">image2020-9-15_11-42-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960557196.png">image2020-9-15_11-45-32.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960557198.png">image2020-9-15_11-46-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960553378/960557199.png">image2020-9-15_11-46-37.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

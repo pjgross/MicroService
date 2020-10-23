@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 1) Meeting Microservice Guidelines</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542706.html">3) Design Considerations</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 1) Meeting Microservice Guidelines
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 12, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>These are the design decisions i made during design that aligned to to the Microservice characteristics published by Martin Fowler</p><p><br/></p><h2 id="id-1)MeetingMicroserviceGuidelines-ComponentisationviaServices">Componentisation via Services</h2><p>This application is being split out into a number of services that provide REST api's if they are publishing synchronous interfaces, and use a message queue for the asynchronous interfaces.</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-Organisedaroundbusinesscapabilities">Organised around business capabilities</h2><p>The services have been chosen around business functions rather than splitting out all functions into services.</p><p>This provides a well defined interface, with the aim of keeping each business service independent of all other services (this was set as a goal at the start, but in practice the authorisation service may have been a synchronous call to the authorisation service if this had not been the case)</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-ProductsnotProjects">Products not Projects</h2><p>Since I am the only user and developer of the system, this is built in.</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-Smartendpoints.anddumbpipes">Smart endpoints. and dumb pipes</h2><p>All of the logic is inside of the services, including authorisation and routing rules.  The REST api by definition is dumb, and I have built no logic into the Messaging server.</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-DecentralisedGovernance">Decentralised Governance</h2><p>I have standardised the technology stack for easy of use, I made some decisions one common error messaging and express middleware, but i would always expect these to happen</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-DecentralisedDataManagement">Decentralised Data Management</h2><p>Each service will have its own data store, which for an update and performance point of view has proven to be a refreshing change. </p><p>In phase 2 I will implement a management information service which can be used for MI reports of all of the data across the services, which will not put load on the individual services.</p><p>The main problem i need to solve is in the setup of test data, since data needs to be consistent across all services, and how this would be accomplished on a large scale.</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-Infrastructureautomation">Infrastructure automation</h2><p>I have developed GitHub workflow scripts that run the Jest unit/Integration tests when the pull request is created.</p><p>There are also GitHub workflow scripts to deploy to DigitalOcean on a successful merge into the master branch.</p><p>The development environment has been automated using skaffold, and the Jest scripts are run automatically when saving a file.</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-Designforfailure">Design for failure</h2><p>The Kubernetes config has been setup to monitor the application and restart any service that has stopped.</p><p>All errors are logged to the console, but to keep the first iteration time down, the implementation of the EFK stack will be left to phase 2</p><h2 class="with-breadcrumbs" style="" id="id-1)MeetingMicroserviceGuidelines-Evolutionarydesign">Evolutionary design</h2><p>The whole purpose of this project is to experiment what it takes to deliver a Microservices application and operate it in production. </p><p>The role of environment management has shown me that we need to understand the bigger picture more than ever, and if we automate and improve inter product team communications, may not be needed as a seperate role in the future, but especially in the testing side of things, we are not mature enough to reach this point yet.</p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

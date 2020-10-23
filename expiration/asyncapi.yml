@@ -1,0 +1,86 @@
+asyncapi: "2.0.0"
+info:
+  title: expiration service
+  version: "1.1.0"
+servers:
+  production:
+    url: http://tickets-srv:3000
+    protocol: nats
+    description: This is the tickets service.
+channels:
+  "order:created":
+    subscribe:
+      message:
+        $ref: "#/components/messages/order-created"
+  "expiration:complete":
+    publish:
+      message:
+        $ref: "#/components/messages/expiration-complete"
+components:
+  messages:
+    order-created:
+      summary: Action received when order is created.
+      description: |
+        A ticket needs to be reserved when an order
+        is created
+      tags:
+        - name: Orders
+        - name: created
+      payload:
+        type: object
+        required:
+          - id
+          - version
+          - status
+          - expiresAt
+          - userId
+        properties:
+          id:
+            type: string
+            example: 9993ujj3883hhww82
+          version:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 0
+          status:
+            type: string
+            enum:
+              - created
+              - cancelled
+              - complete
+            example: created
+          userId:
+            type: string
+            example: 9993ujj3883hhww82
+          expiresAt:
+            type: string
+            format: datetime
+            example: 2019-08-24T14:15:22Z
+          ticket:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 9993ujj3883hhww82
+              price:
+                type: number
+                format: double
+                minimum: 0.00
+                example: 120.99
+    expiration-complete:
+      summary: Action sent when payment is timer expires
+      description: |
+        Used by any service that needs to know when
+        a payment expiration expires
+      tags:
+        - name: Expiration
+        - name: payment
+      payload:
+        type: object
+        required:
+          - orderId
+        properties:
+          orderId:
+            type: string
+            example: 9993ujj3883h29983ju

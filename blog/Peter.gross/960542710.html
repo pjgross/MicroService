@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 3) Handling Concurrency Issues</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542706.html">3) Design Considerations</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 3) Handling Concurrency Issues
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 14, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>One of the main concerns when using a Message Stream is that it does not guarantee that the messages that are sent will arrive in the order they are sent.</p><p>In a low transaction rate system, this will not be an issue, <strong>except when a service goes down.</strong>. Remember we have designed the system so the services are independent of one another.</p><p>In this example we have the ticketing service creating a ticket and updating the information twice sending these updates over to the orders service.  </p><p>If the updates were done quickly, or the orders service was down for a period and it is now receiving all of the updates in a batch very quickly, the £100 update may be received first and then the £75 update, this results in a ticker price of £75 which is incorrect.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="700" src="attachments/960542710/960554983.png" data-image-src="attachments/960542710/960554983.png" data-unresolved-comment-count="0" data-linked-resource-id="960554983" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-14_11-44-42.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542710" data-linked-resource-container-version="4"></span></p><p>To make sure our system processes these updates in the correct order we send the version of the ticket record with the rest of the details.</p><p>When processing the message we check the current version of the ticket record we have, and if it is not one less than the one on the message we throw the message back to the streaming service until we have processed the one we were expecting.</p><p>e.g. we create the ticket and orders has a version record, we update the price to £75 and give it a version of 1, then update the price and give it a version of 2.</p><p>If the orders service has a ticket with a price of £50 and version 0, then receives an update to £100 with a version of two, then it will rejectthe update and send the message back to the message queue until it has processed the message with a version of 1</p><p>When making a payment we can then specify the version of the ticket we were buying</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="700" src="attachments/960542710/960555023.png" data-image-src="attachments/960542710/960555023.png" data-unresolved-comment-count="0" data-linked-resource-id="960555023" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-14_11-58-11.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542710" data-linked-resource-container-version="4"></span></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542710/960554204.png">image2020-9-13_19-40-30.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542710/960554205.png">image2020-9-13_19-46-5.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542710/960554948.png">image2020-9-14_11-39-25.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542710/960554983.png">image2020-9-14_11-44-42.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542710/960555023.png">image2020-9-14_11-58-11.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

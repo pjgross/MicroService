@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Peter gross : 2) Setup</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Peter gross</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MicroService-Learning-Journey---Story-so-far_956991180.html">MicroService Learning Journey - Story so far</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="960542739.html">5) How to---</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Peter gross : 2) Setup
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Peter Gross</span>, last modified on Sep 23, 2020
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout three-with-sidebars" data-layout="three-with-sidebars">
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p><p><br/></p><p><br/></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h2 id="id-2)Setup-Kubernetes"><span style="color: rgb(0,51,102);">Kubernetes</span></h2><p><span style="color: rgb(0,51,102);">1) The ingress manifest file is built for the NGINX Ingress Controller so you have to follow the<a class="external-link" href="https://kubernetes.github.io/ingress-nginx/deploy" rel="nofollow"> install instructions</a> for your kubernetes platform</span></p><p><span style="color: rgb(0,51,102);">2) We need to create the secrets in the cluster before we install our deployments</span></p><p style="margin-left: 30.0px;"><span style="color: rgb(0,51,102);">If you are using your own private repository for your docker images</span></p><p style="margin-left: 60.0px;"><span style="color: rgb(0,51,102);">kubectl create secret docker-registry regcred --docker-server=&lt;<a class="external-link" href="http://registry.gitlab.com" rel="nofollow">r</a>epository&gt; --docker-username='*******' --docker-password='************'</span></p><p style="margin-left: 30.0px;">We now need to setup the secrets that our manifest files use</p><p style="margin-left: 60.0px;">kubectl create secret generic stripe-secret --from-literal STRIPE_KEY=&lt;key&gt;</p><p style="margin-left: 60.0px;">kubectl create secret generic jwt-secret --from-literal=JWT_KEY='&lt;key&gt;'</p><p>3) Update your hosts file to point ticketing.dev to your cluster (for docker for desktop this is 127.0.0.1)</p><p>                 On  mac and linux the hosts file is at /etc/hosts and on windows it is at C:\Windows\System32\Drivers\etc\hosts</p><h2 id="id-2)Setup-DockerHub">DockerHub</h2><p>I have placed the images used in the Kubernetes manifest files and skaffold config in a public repository, but if you want to experiment and add to the code (not difficult I tried to keep it simple), then you will have to create your own dockerhub account and change the image settings in these config files.</p><h2 id="id-2)Setup-NPMRepository">NPM Repository</h2><p>Again like the Dockerhub settings, I have made my npm module public, but if you want to change or experiment with the common module you will have to create your own npm account and replace all of the </p><p><span style="color: rgb(0,51,102);">                  import { ... } from &quot;@msexample/common&quot;</span></p><p><span style="color: rgb(0,51,102);">with</span></p><p><span style="color: rgb(0,51,102);">                  import { ... } from &quot;@&lt;yourorganisation&gt;/common&quot;</span></p><h2 id="id-2)Setup-StripeKeys">Stripe Keys</h2><p>In this project I have used stripe in free development mode, but you will have to use your own keys and update the Kubernetes secret as defined above for the private key and place your public key in the config.yaml in the infra directory.</p><h2 id="id-2)Setup-Checktheconfig">Check the config</h2><p>The client needs to talk directly to the loadbalancer when rendering on the server, so you must make sure the SERVER_URL_BASE points to your load balancer in the /infra/k8s-dev/config.yaml file</p><p>The format should be &quot;http://&lt;Loadbalancer Name&gt;.&lt;Namespace&gt;.svc.cluster.local&quot;</p><p>e.g. on my docker for desktop kubernetes cluster</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="750" src="attachments/960542748/960555844.png" data-image-src="attachments/960542748/960555844.png" data-unresolved-comment-count="0" data-linked-resource-id="960555844" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-14_16-0-50.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542748" data-linked-resource-container-version="11"></span></p><p>Which means that the config should be setup wit<span style="color: rgb(0,51,102);">h  </span></p><p><span style="color: rgb(0,51,102);">     SERVER_URL_BASE: &quot;<a class="external-link" href="http://ingress-nginx-controller.ingress-nginx.svc.cluster.local" rel="nofollow" style="color: rgb(0,51,102);">http://ingress-nginx-controller.ingress-nginx.svc.cluster.local</a>&quot;</span></p><p><br/></p><h2 id="id-2)Setup-Automation">Automation</h2><p>What I am aiming for is a flow like this</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="400" src="attachments/960542748/963489880.png" data-image-src="attachments/960542748/963489880.png" data-unresolved-comment-count="0" data-linked-resource-id="963489880" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2020-9-23_21-13-57.png" data-base-url="https://confluence.tuigroup.com" data-linked-resource-content-type="image/png" data-linked-resource-container-id="960542748" data-linked-resource-container-version="11"></span></p><p>Where we are using Skaffold in the local devlopment environment, to allow the developer to quickly iterate through the coding and testing cycles.</p><p>I will then implement a GitOps implementation using <a class="external-link" href="https://www.weave.works/oss/flux/" rel="nofollow">flux </a>which we install in our kubernetes cluster and will always keep the environment aligned with the version control repository (officially known as GitOps).  Flux has been made open source and donated to the CNCF by weaveworks.</p><p>The Skaffold file has already been included in the github repository, and when I get the flux implementation working, I will include those files as well.</p><p><br/></p><p><br/></p><p><br/></p></div>
+</div>
+<div class="cell sidebars" data-type="sidebars">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542748/960555820.png">image2020-9-14_15-52-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542748/960555844.png">image2020-9-14_16-0-50.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/960542748/963489880.png">image2020-9-23_21-13-57.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Oct 17, 2020 17:15</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,9 @@
+stages:
+  - build
+  - test
+  - deploy
+
+test:
+  stage: test
+  script:
+    - echo kubectl get nodes
